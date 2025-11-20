@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Platform } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   useColorScheme,
   Modal,
+  Platform,
 } from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
@@ -53,11 +54,11 @@ export default function ProfileScreen() {
   };
 
   const menuItems = [
-    { icon: 'calendar-outline', label: 'Mis Citas', onPress: () => {} },
-    { icon: 'card-outline', label: 'Métodos de Pago', onPress: () => {} },
-    { icon: 'document-text-outline', label: 'Historial', onPress: () => {} },
-    { icon: 'settings-outline', label: 'Configuración', onPress: () => {} },
-    { icon: 'help-circle-outline', label: 'Ayuda y Soporte', onPress: () => {} },
+    { icon: 'calendar-outline', label: 'Mis Citas', onPress: () => { } },
+    { icon: 'card-outline', label: 'Métodos de Pago', onPress: () => { } },
+    { icon: 'document-text-outline', label: 'Historial', onPress: () => { } },
+    { icon: 'settings-outline', label: 'Configuración', onPress: () => { } },
+    { icon: 'help-circle-outline', label: 'Ayuda y Soporte', onPress: () => { } },
   ];
 
   if (!user) {
@@ -75,7 +76,7 @@ export default function ProfileScreen() {
           />
           <Text style={[styles.name, { color: colors.text }]}>{user.name}</Text>
           <Text style={[styles.email, { color: colors.textSecondary }]}>{user.email}</Text>
-          
+
           <TouchableOpacity
             style={[styles.roleButton, { backgroundColor: colors.backgroundTertiary }]}
             onPress={() => setShowRoleModal(true)}

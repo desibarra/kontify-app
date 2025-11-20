@@ -1,48 +1,242 @@
 import { AIMessage, CaseLevel, CaseSummary, Specialty, AIRecommendation } from '../constants/Types';
 
+/* ============================================================
+   🔥 ASISTENTE FISCAL PROFESIONAL LIBRE - KONTIFY+
+   Asesor fiscal que responde cualquier pregunta sin restricciones
+   ============================================================ */
+
 const fiscalKnowledge = {
-  iva: {
-    keywords: ['iva', 'impuesto al valor agregado', 'valor agregado', '16%'],
-    response: 'El IVA (Impuesto al Valor Agregado) en México es del 16% general y 0% en zonas fronterizas. Se aplica a la venta de bienes, prestación de servicios y arrendamiento. Debes emitir facturas y presentar declaraciones mensuales. ¿Tienes dudas sobre cómo calcular el IVA acreditable o trasladado?',
+  devolucion_iva: {
+    keywords: [
+      'devolución', 'devolucion', 'saldo a favor', 'iva a favor',
+      'recuperar iva', 'reembolso iva', 'f3241', 'fed'
+    ],
+    response: `Para obtener una devolución de IVA debes seguir el proceso oficial del SAT:
+
+🧾 **Proceso oficial**
+
+**1. Tener saldo a favor declarado**
+• Declaración mensual presentada correctamente
+• Fundamento: *LIVA art. 6*
+
+**2. Conciliar CFDI vs. Pagos**
+• Sin facturas canceladas
+• PPD con complemento de pago
+
+**3. Presentar solicitud por FED (Formato F3241)**
+Documentación requerida:
+• Estados de cuenta
+• Relación de CFDI
+• Contratos y soporte de operaciones
+• Opinión de cumplimiento vigente
+
+**4. Plazo de respuesta**
+El SAT tiene 40 días hábiles (*CFF art. 22*)
+
+⚠️ **Riesgos comunes**
+• Proveedores no localizados
+• DIOT incorrecta
+• CFDI con inconsistencias`
   },
-  deducciones: {
-    keywords: ['deducción', 'deducir', 'gasto deducible', 'comprobante'],
-    response: 'Para que un gasto sea deducible debe cumplir: ser estrictamente indispensable, estar respaldado por CFDI, cumplir requisitos fiscales, y estar pagado con medios bancarios si excede $2,000. Las deducciones comunes incluyen: sueldos, arrendamiento, servicios profesionales, combustible, equipo de cómputo. ¿Necesitas ayuda con algún tipo específico de deducción?',
-  },
-  facturacion: {
-    keywords: ['factura', 'cfdi', 'facturación electrónica', 'comprobante fiscal'],
-    response: 'La facturación electrónica (CFDI) es obligatoria en México. Debe contener: RFC emisor y receptor, descripción del bien/servicio, forma de pago, uso del CFDI. Tienes hasta 72 horas para facturar después de la operación. Es importante usar el uso de CFDI correcto para maximizar deducciones. ¿Tienes dudas sobre cómo emitir o solicitar facturas?',
-  },
-  isr: {
-    keywords: ['isr', 'impuesto sobre la renta', 'renta', 'declaración anual'],
-    response: 'El ISR (Impuesto Sobre la Renta) se paga sobre ingresos. Personas físicas: pagas mensual o anual según tu régimen. Personas morales: pagos provisionales mensuales y declaración anual. Las tasas varían según ingresos. Existen deducciones personales para personas físicas. ¿Necesitas orientación sobre tu régimen fiscal o cómo calcular tu ISR?',
-  },
+
   declaraciones: {
-    keywords: ['declaración', 'declarar', 'sat', 'presentar'],
-    response: 'Las declaraciones fiscales se presentan en el portal del SAT con e.firma o contraseña. Principales declaraciones: mensuales (IVA, ISR provisional), anual (ISR, informativa). Es crucial presentarlas a tiempo para evitar multas y recargos. Puedes hacerlas tú mismo o con un contador. ¿Tienes dudas sobre qué declaraciones te corresponden?',
+    keywords: ['declaración', 'declarar', 'complementaria', 'mensual', 'anual'],
+    response: `Las declaraciones fiscales se presentan según tu régimen:
+
+📌 **Tipos de declaraciones**
+
+**IVA / ISR mensual**
+• Fundamento: *CFF y RMF*
+• Plazo: Día 17 del mes siguiente
+
+**Declaración anual**
+• Personas Físicas: Abril
+• Personas Morales: Marzo
+• Fundamento: *LISR*
+
+**Complementarias**
+Permitidas en la mayoría de casos, excepto restricciones específicas del SAT.`
+  },
+
+  iva: {
+    keywords: ['iva', 'impuesto al valor agregado', 'acreditable', 'trasladado'],
+    response: `El IVA en México funciona así:
+
+📌 **Tasas vigentes**
+• Tasa general: **16%**
+• Tasa frontera: **8%**
+• Tasa 0%: Exportaciones y alimentos básicos
+
+**Conceptos clave**
+
+**IVA trasladado**
+El que cobras a tus clientes
+
+**IVA acreditable**
+El que pagas a proveedores (*LIVA art. 5*)
+
+**Saldo a favor**
+Cuando acreditable > trasladado`
+  },
+
+  facturacion: {
+    keywords: ['factura', 'cfdi', 'facturación', 'timbrar', 'complemento'],
+    response: `El CFDI debe cumplir requisitos del Anexo 20:
+
+📌 **Requisitos principales**
+• RFC emisor y receptor válidos
+• Uso correcto del CFDI
+• Método y forma de pago
+• Descripción clara
+
+**Complementos comunes**
+• **PPD**: Pago en parcialidades
+• **Carta Porte**: Transporte de mercancías
+• **Pagos**: Relacionar facturas con pagos`
+  },
+
+  deducciones: {
+    keywords: ['deducción', 'deducible', 'gasto', 'estrictamente indispensable'],
+    response: `Un gasto es deducible si cumple:
+
+✔ **Requisitos obligatorios**
+• Estrictamente indispensable (*LISR*)
+• CFDI válido y vigente
+• Pagado por medios bancarios (si > $2,000)
+• Registrado contablemente
+
+**Gastos comunes deducibles**
+• Sueldos y salarios
+• Arrendamiento
+• Servicios profesionales
+• Combustible y mantenimiento
+• Equipo de cómputo`
+  },
+
+  isr: {
+    keywords: ['isr', 'renta', 'impuesto sobre la renta'],
+    response: `El ISR se calcula sobre ingresos menos deducciones autorizadas:
+
+📌 **Regímenes**
+
+**Personas Físicas**
+• RIF (Régimen de Incorporación Fiscal)
+• RESICO (Régimen Simplificado de Confianza)
+• Actividad empresarial
+• Servicios profesionales
+
+**Personas Morales**
+• Régimen general
+• Coeficiente de utilidad
+• Pagos provisionales mensuales
+
+Fundamento: *LISR, CFF, RMF vigente*`
+  },
+
+  auditoria: {
+    keywords: ['auditoría', 'requerimiento', 'crédito fiscal', 'visita domiciliaria', 'embargo'],
+    response: `⚠️ **Atención inmediata requerida**
+
+Estás ante un proceso de fiscalización del SAT.
+
+📌 **Riesgos principales**
+• Plazos estrictos (15-20 días hábiles)
+• Multas por incumplimiento
+• Crédito fiscal determinado
+• Cancelación de sellos digitales
+• Embargo precautorio
+
+**Acciones inmediatas**
+1. Identifica el tipo de requerimiento
+2. Revisa el plazo de respuesta
+3. Reúne documentación solicitada
+4. Prepara respuesta formal
+
+Fundamento: *CFF art. 42, 46-A, 53-B*
+
+**Recomiendo asistencia inmediata de un experto fiscal.**`
+  },
+
+  alta_sat: {
+    keywords: ['alta', 'registro', 'inscripción', 'inscribir', 'darme de alta', 'como me registro', 'obtener rfc'],
+    response: `Para darte de alta en el SAT necesitas:
+
+📌 **Documentos requeridos**
+• Acta de nacimiento
+• Comprobante de domicilio (reciente)
+• Identificación oficial vigente
+• CURP
+
+**Proceso en línea**
+1. Ingresa a **sat.gob.mx**
+2. Selecciona "Trámites del RFC"
+3. Captura tus datos
+4. Sube documentos digitalizados
+5. Obtén tu constancia de RFC
+
+**Proceso presencial**
+1. Agenda cita en **sat.gob.mx**
+2. Acude con documentos originales
+3. Recibe tu constancia y e.firma
+
+Fundamento: *CFF art. 27*`
+  },
+
+  rfc: {
+    keywords: ['rfc', 'clave fiscal', 'registro federal', 'número de contribuyente'],
+    response: `El RFC es tu clave única como contribuyente en México.
+
+📌 **Características**
+• **Personas físicas**: 13 caracteres
+• **Personas morales**: 12 caracteres
+• Obligatorio para facturar y declarar
+
+**Usos principales**
+• Emitir y recibir facturas (CFDI)
+• Presentar declaraciones
+• Realizar trámites fiscales
+• Abrir cuentas bancarias empresariales
+
+**¿Perdiste tu RFC?**
+Puedes consultarlo en sat.gob.mx con tu CURP.
+
+Fundamento: *CFF art. 27*`
   },
 };
 
+
+/* ============================================================
+   🔥 SERVICIO PRINCIPAL DEL ASISTENTE FISCAL
+   ============================================================ */
+
 export const aiService = {
+
   generateResponse: async (message: string, questionNumber: number): Promise<string> => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        const lowerMessage = message.toLowerCase();
+        const lower = message.toLowerCase();
 
-        // Check for greeting
-        if (lowerMessage.match(/hola|buenos días|buenas tardes|buenas noches/)) {
-          resolve('¡Hola! Soy tu asistente fiscal de Kontify+. Puedo ayudarte con preguntas sobre IVA, ISR, deducciones, facturación y más temas fiscales. Tienes 3 preguntas gratuitas. ¿En qué puedo asistirte hoy?');
+        // Saludo SOLO en la primera pregunta Y si el mensaje es principalmente un saludo
+        if (questionNumber === 1 && lower.match(/^(hola|buenos días|buenas tardes|buenas noches|hi|hello)[\s\?\!]*$/i)) {
+          resolve(`¡Con gusto te apoyo!
+
+Soy tu asistente fiscal profesional de **Kontify+**.
+
+Tienes **3 preguntas gratuitas**.`);
           return;
         }
 
-        // Search knowledge base
-        for (const [key, knowledge] of Object.entries(fiscalKnowledge)) {
-          if (knowledge.keywords.some(keyword => lowerMessage.includes(keyword))) {
-            let response = knowledge.response;
+        // Buscar en la base de conocimiento
+        for (const [, knowledge] of Object.entries(fiscalKnowledge)) {
+          if (knowledge.keywords.some(k => lower.includes(k))) {
+            let response = knowledge.response.trim();
 
-            // Add suggestion to contact expert on 3rd question
             if (questionNumber === 3) {
-              response += '\n\nℹ️ Has usado tus 3 preguntas gratuitas. Te recomiendo conectar con uno de nuestros expertos certificados para asesoría personalizada. Puedes buscarlos en la pestaña principal.';
+              response += `
+
+⚠️ **Has agotado tus 3 preguntas gratuitas.**
+
+Para asesoría personalizada completa, te recomiendo conectar con un experto fiscal certificado.`;
             }
 
             resolve(response);
@@ -50,182 +244,97 @@ export const aiService = {
           }
         }
 
-        // Default response
-        let defaultResponse = 'Entiendo tu consulta sobre temas fiscales. Te recomendaría especificar más sobre tu situación: ¿Es sobre IVA, ISR, deducciones, facturación u otro tema? Así podré orientarte mejor.';
+        // Respuesta por defecto - Asesor libre profesional
+        let defaultResp = `Entiendo tu consulta.
+
+Como asesor fiscal profesional, puedo ayudarte con temas relacionados a:
+
+• **Impuestos**: IVA, ISR, IEPS
+• **Declaraciones**: Mensuales, anuales, complementarias
+• **CFDI**: Facturación electrónica y complementos
+• **Deducciones**: Gastos deducibles y requisitos
+• **Auditorías**: Defensa fiscal y requerimientos del SAT
+• **Trámites**: RFC, e.firma, obligaciones fiscales
+
+Por favor, especifica tu consulta y te daré una respuesta profesional basada en la legislación vigente.`;
 
         if (questionNumber === 3) {
-          defaultResponse += '\n\nℹ️ Has usado tus 3 preguntas gratuitas. Para recibir asesoría personalizada y detallada, te sugiero contactar a uno de nuestros expertos certificados en la pestaña principal.';
+          defaultResp += `
+
+⚠️ **Has agotado tus 3 preguntas.**
+
+Para asesoría fiscal profunda y personalizada, te recomiendo contactar a un experto certificado.`;
         }
 
-        resolve(defaultResponse);
-      }, 800);
+        resolve(defaultResp);
+      }, 350);
     });
   },
 
   suggestExperts: async (topic: string): Promise<string[]> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const suggestions: string[] = [];
-        const lowerTopic = topic.toLowerCase();
+    const t = topic.toLowerCase();
+    const list = [];
 
-        if (lowerTopic.includes('iva')) {
-          suggestions.push('IVA', 'Declaraciones');
-        }
-        if (lowerTopic.includes('dedu')) {
-          suggestions.push('Deducciones', 'Optimización Fiscal');
-        }
-        if (lowerTopic.includes('factur')) {
-          suggestions.push('Facturación Electrónica');
-        }
-        if (lowerTopic.includes('isr') || lowerTopic.includes('renta')) {
-          suggestions.push('ISR', 'Planeación Fiscal');
-        }
-        if (lowerTopic.includes('nómina') || lowerTopic.includes('empleado')) {
-          suggestions.push('Nómina');
-        }
+    if (t.includes('iva')) list.push('IVA', 'Devoluciones');
+    if (t.includes('isr')) list.push('ISR', 'Planeación Fiscal');
+    if (t.includes('cfdi')) list.push('CFDI', 'Facturación');
+    if (t.includes('auditor')) list.push('Auditoría', 'Defensa Fiscal');
+    if (t.includes('dedu')) list.push('Deducciones');
+    if (t.includes('diot')) list.push('DIOT', 'IVA Acreditable');
 
-        resolve(suggestions.length > 0 ? suggestions : ['Consultoría General']);
-      }, 200);
-    });
+    return list.length ? list : ['Consultoría General'];
   },
 
-  // ============================================
-  // NEW METHODS FOR AI → EXPERT FLOW
-  // ============================================
+  classifyCase: (message: string, history: AIMessage[]): CaseLevel => {
+    const lower = message.toLowerCase();
+    const full = history.map(x => x.content.toLowerCase()).join(' ');
 
-  classifyCase: (message: string, conversationHistory: AIMessage[]): CaseLevel => {
-    const lowerMessage = message.toLowerCase();
-    const fullConversation = conversationHistory.map(m => m.content.toLowerCase()).join(' ');
-
-    // RED LEVEL: Urgent/complex cases
-    const redKeywords = [
-      'auditoría', 'auditoria', 'sat me está auditando', 'revisión del sat',
-      'multa', 'sanción', 'crédito fiscal', 'requerimiento',
-      'urgente', 'inmediato', 'hoy mismo', 'mañana',
-      'demanda', 'juicio', 'controversia fiscal', 'amparo',
-      'cierre de negocio', 'embargo', 'cancelación de sellos'
+    const RED = [
+      'auditoría', 'requerimiento', 'crédito fiscal', 'visita',
+      'embargo', 'sellos', 'multas', 'urgente', 'fiscalización'
+    ];
+    const YELLOW = [
+      'planear', 'planeacion', 'anual', 'complementaria',
+      'deducciones', 'estructura', 'régimen'
     ];
 
-    // YELLOW LEVEL: Moderate complexity
-    const yellowKeywords = [
-      'declaración anual', 'declaracion anual', 'complementaria',
-      'planeación fiscal', 'planeacion fiscal', 'optimización',
-      'reestructura', 'fusión', 'escisión',
-      'nómina compleja', 'nomina compleja', 'imss', 'infonavit',
-      'facturación masiva', 'facturacion masiva',
-      'régimen fiscal', 'regimen fiscal', 'cambio de régimen'
-    ];
-
-    // Check for RED level
-    if (redKeywords.some(keyword => lowerMessage.includes(keyword) || fullConversation.includes(keyword))) {
-      return 'red';
-    }
-
-    // Check for YELLOW level
-    if (yellowKeywords.some(keyword => lowerMessage.includes(keyword) || fullConversation.includes(keyword))) {
-      return 'yellow';
-    }
-
-    // GREEN level: Simple questions
+    if (RED.some(k => lower.includes(k) || full.includes(k))) return 'red';
+    if (YELLOW.some(k => lower.includes(k) || full.includes(k))) return 'yellow';
     return 'green';
   },
 
-  generateCaseSummary: (conversationHistory: AIMessage[], caseLevel: CaseLevel): CaseSummary => {
-    const userMessages = conversationHistory.filter(m => m.role === 'user');
-    const lastUserMessage = userMessages[userMessages.length - 1]?.content || '';
-    const fullConversation = conversationHistory.map(m => `${m.role}: ${m.content}`).join('\n');
+  generateCaseSummary: (history: AIMessage[], level: CaseLevel): CaseSummary => {
+    const last = history.filter(x => x.role === 'user').at(-1)?.content || '';
+    const all = history.map(x => `${x.role}: ${x.content}`).join('\n').toLowerCase();
 
-    // Detect specialties from conversation
-    const detectedSpecialties: Specialty[] = [];
-    const conversationLower = fullConversation.toLowerCase();
+    const specialties: Specialty[] = [];
 
-    if (conversationLower.includes('iva') || conversationLower.includes('valor agregado')) {
-      detectedSpecialties.push('IVA');
-    }
-    if (conversationLower.includes('isr') || conversationLower.includes('renta')) {
-      detectedSpecialties.push('ISR');
-    }
-    if (conversationLower.includes('nómina') || conversationLower.includes('nomina') || conversationLower.includes('empleado')) {
-      detectedSpecialties.push('Nómina');
-    }
-    if (conversationLower.includes('deducción') || conversationLower.includes('deduccion') || conversationLower.includes('gasto')) {
-      detectedSpecialties.push('Deducciones');
-    }
-    if (conversationLower.includes('factura') || conversationLower.includes('cfdi')) {
-      detectedSpecialties.push('Facturación Electrónica');
-    }
-    if (conversationLower.includes('declaración') || conversationLower.includes('declaracion')) {
-      detectedSpecialties.push('Declaraciones');
-    }
-    if (conversationLower.includes('auditoría') || conversationLower.includes('auditoria')) {
-      detectedSpecialties.push('Auditoría');
-    }
-    if (conversationLower.includes('planeación') || conversationLower.includes('planeacion') || conversationLower.includes('optimización')) {
-      detectedSpecialties.push('Planeación Fiscal');
-    }
+    if (all.includes('iva')) specialties.push('IVA');
+    if (all.includes('devolu')) specialties.push('Devoluciones');
+    if (all.includes('cfdi') || all.includes('factura')) specialties.push('Facturación Electrónica');
+    if (all.includes('isr')) specialties.push('ISR');
+    if (all.includes('auditor')) specialties.push('Auditoría');
+    if (all.includes('dedu')) specialties.push('Deducciones');
+    if (all.includes('declar')) specialties.push('Declaraciones');
 
-    // If no specialties detected, default to general
-    if (detectedSpecialties.length === 0) {
-      detectedSpecialties.push('Declaraciones');
-    }
-
-    // Determine urgency
-    let urgency: 'low' | 'medium' | 'high' = 'low';
-    if (caseLevel === 'red') urgency = 'high';
-    else if (caseLevel === 'yellow') urgency = 'medium';
+    if (!specialties.length) specialties.push('Consultoría General');
 
     return {
-      level: caseLevel,
-      detectedSpecialties,
-      userQuery: lastUserMessage,
-      conversationContext: fullConversation,
-      urgency,
-      generatedAt: new Date(),
+      level,
+      detectedSpecialties: specialties,
+      userQuery: last,
+      conversationContext: all,
+      urgency: level === 'red' ? 'high' : level === 'yellow' ? 'medium' : 'low',
+      generatedAt: new Date()
     };
   },
 
-  getExpertRecommendations: (caseSummary: CaseSummary): AIRecommendation[] => {
-    const recommendations: AIRecommendation[] = [];
+  getExpertRecommendations: (summary: CaseSummary): AIRecommendation[] => {
+    return summary.detectedSpecialties.map((spec, i) => ({
+      specialty: spec,
+      confidence: i === 0 ? 0.9 : 0.7 - i * 0.1,
+      reason: `Caso relacionado con ${spec} detectado en la conversación.`
+    }));
+  }
 
-    // Create recommendations based on detected specialties
-    caseSummary.detectedSpecialties.forEach((specialty, index) => {
-      const confidence = index === 0 ? 0.9 : 0.7 - (index * 0.1);
-
-      let reason = '';
-      switch (specialty) {
-        case 'IVA':
-          reason = 'Tu consulta involucra temas de IVA y cálculos de impuestos';
-          break;
-        case 'ISR':
-          reason = 'Necesitas asesoría sobre Impuesto Sobre la Renta';
-          break;
-        case 'Nómina':
-          reason = 'Tu caso requiere experiencia en nóminas y seguridad social';
-          break;
-        case 'Deducciones':
-          reason = 'Puedes optimizar tus deducciones fiscales';
-          break;
-        case 'Facturación Electrónica':
-          reason = 'Necesitas ayuda con facturación y CFDI';
-          break;
-        case 'Declaraciones':
-          reason = 'Requieres apoyo para presentar declaraciones correctamente';
-          break;
-        case 'Auditoría':
-          reason = 'Tu situación requiere experiencia en auditorías fiscales';
-          break;
-        case 'Planeación Fiscal':
-          reason = 'Puedes beneficiarte de una estrategia fiscal personalizada';
-          break;
-      }
-
-      recommendations.push({
-        specialty,
-        confidence,
-        reason,
-      });
-    });
-
-    return recommendations;
-  },
 };

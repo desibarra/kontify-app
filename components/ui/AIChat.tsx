@@ -37,8 +37,8 @@ interface AIChatProps {
 }
 
 export default function AIChat({ userId, onNavigateToExperts }: AIChatProps) {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === "dark" ? Colors.dark : Colors.light;
+  // Always use dark theme
+  const colors = Colors.dark;
 
   const [inputText, setInputText] = useState("");
   const flatListRef = useRef<FlatList>(null);

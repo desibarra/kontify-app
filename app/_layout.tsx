@@ -5,8 +5,8 @@ import { useColorScheme } from 'react-native';
 import { Colors } from '../constants/Colors';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  // Always use dark theme
+  const colors = Colors.dark;
 
   return (
     <AuthProvider>
@@ -14,13 +14,20 @@ export default function RootLayout() {
         <Stack
           screenOptions={{
             headerStyle: {
-              backgroundColor: colors.background,
+              backgroundColor: colors.backgroundSecondary,
             },
             headerTintColor: colors.text,
             headerShadowVisible: false,
+            headerTitleStyle: {
+              fontWeight: '600',
+            },
+            contentStyle: {
+              backgroundColor: colors.backgroundSecondary,
+            },
           }}
         >
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="(experts)" options={{ headerShown: false }} />
           <Stack.Screen
             name="expert-detail"
             options={{

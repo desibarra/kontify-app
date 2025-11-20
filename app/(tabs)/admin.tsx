@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useColorScheme } from 'react-native';
-import { Colors, Spacing, Typography } from '../../constants/Colors';
+import { Colors, Typography, Spacing, BorderRadius, Shadows } from '../../constants/Colors';
 
 export default function AdminScreen() {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  // Always use dark theme
+  const colors = Colors.dark;
 
   return (
     <ScrollView

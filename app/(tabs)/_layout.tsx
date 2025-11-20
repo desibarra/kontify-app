@@ -7,8 +7,8 @@ import { useAuth } from '../../hooks/useAuth';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  // Always use dark theme
+  const colors = Colors.dark;
   const { user } = useAuth();
   const insets = useSafeAreaInsets();
 
@@ -20,6 +20,7 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: colors.cardBackground,
           borderTopColor: colors.border,
+          borderTopWidth: 1,
           height: Platform.select({
             ios: insets.bottom + 60,
             android: insets.bottom + 60,
@@ -38,10 +39,13 @@ export default function TabLayout() {
           fontWeight: '600',
         },
         headerStyle: {
-          backgroundColor: colors.background,
+          backgroundColor: colors.backgroundSecondary,
         },
         headerTintColor: colors.text,
         headerShadowVisible: false,
+        headerTitleStyle: {
+          fontWeight: '600',
+        },
       }}
     >
       <Tabs.Screen
@@ -51,8 +55,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => <Ionicons name="search" size={size} color={color} />,
           headerLeft: () => (
             <Image
-              source={{ uri: 'https://cdn-ai.onspace.ai/onspace/project/image/MjtwgP8v8YPMDGhDk67HJg/Screenshot_20251027_220349_Chrome.jpg' }}
-              style={{ width: 40, height: 40, marginLeft: Spacing.md }}
+              source={require('../../assets/images/logo-kontify.png')}
+              style={{ width: 36, height: 36, marginLeft: Spacing.md }}
               contentFit="contain"
             />
           ),

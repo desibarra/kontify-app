@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, useColorScheme } from 'react-
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { Expert } from '../../constants/Types';
-import { Colors, Spacing, BorderRadius, Typography } from '../../constants/Colors';
+import { Colors, Spacing, BorderRadius, Typography, Shadows } from '../../constants/Colors';
 
 interface ExpertCardProps {
   expert: Expert;
@@ -11,14 +11,21 @@ interface ExpertCardProps {
 }
 
 export default function ExpertCard({ expert, onPress }: ExpertCardProps) {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  // Always use dark theme for premium look
+  const colors = Colors.dark;
 
   return (
     <TouchableOpacity
-      style={[styles.card, { backgroundColor: colors.cardBackground, borderColor: colors.cardBorder }]}
+      style={[
+        styles.card,
+        {
+          backgroundColor: colors.cardBackground,
+          borderColor: colors.cardBorder,
+        },
+        Shadows.md,
+      ]}
       onPress={onPress}
-      activeOpacity={0.7}
+      activeOpacity={0.8}
     >
       <View style={styles.header}>
         <Image
@@ -32,18 +39,25 @@ export default function ExpertCard({ expert, onPress }: ExpertCardProps) {
               {expert.name}
             </Text>
             {expert.verified && (
-              <Ionicons name="checkmark-circle" size={18} color={colors.verified} />
+              <Ionicons name="checkmark-circle" size={18} color={colors.primary} />
             )}
           </View>
           <View style={styles.ratingRow}>
-            <Ionicons name="star" size={14} color={colors.rating} />
-            <Text style={[styles.rating, { color: colors.text }]}>
+            <Ionicons name="star" size={16} color={colors.primary} />
+            <Text style={[styles.rating, { color: colors.primary }]}>
               {expert.rating.toFixed(1)}
             </Text>
-            <Text style={[styles.reviews, { color: colors.textSecondary }]}>
-              ({expert.reviewCount} reseñas)
+            <Text style={[styles.reviews, { color: colors.textTertiary }]}>
+              ({expert.reviewCount})
             </Text>
           </View>
+        </View>
+        <View style={styles.priceContainer}>
+          <Text style={[styles.priceLabel, { color: colors.textTertiary }]}>Desde</Text>
+          <Text style={[styles.price, { color: colors.primary }]}>
+            ${expert.hourlyRate}
+          </Text>
+          <Text style={[styles.priceUnit, { color: colors.textTertiary }]}>/hr</Text>
         </View>
       </View>
 
@@ -55,23 +69,19 @@ export default function ExpertCard({ expert, onPress }: ExpertCardProps) {
         {expert.specialties.slice(0, 3).map((specialty, index) => (
           <View
             key={index}
-            style={[styles.specialtyTag, { backgroundColor: colors.backgroundTertiary }]}
+            style={[
+              styles.specialtyTag,
+              {
+                backgroundColor: colors.backgroundElevated,
+                borderColor: colors.border,
+              },
+            ]}
           >
-            <Text style={[styles.specialtyText, { color: colors.textSecondary }]}>
+            <Text style={[styles.specialtyText, { color: colors.secondary }]}>
               {specialty}
             </Text>
           </View>
         ))}
-      </View>
-
-      <View style={styles.footer}>
-        <View style={styles.rateContainer}>
-          <Text style={[styles.rateLabel, { color: colors.textSecondary }]}>Desde</Text>
-          <Text style={[styles.rate, { color: colors.primary }]}>
-            ${expert.hourlyRate}/hora
-          </Text>
-        </View>
-        <Ionicons name="chevron-forward" size={20} color={colors.textTertiary} />
       </View>
     </TouchableOpacity>
   );
@@ -86,11 +96,12 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.sm,
+    alignItems: 'flex-start',
   },
   avatar: {
-    width: 60,
-    height: 60,
+    width: 56,
+    height: 56,
     borderRadius: BorderRadius.full,
     marginRight: Spacing.md,
   },
@@ -102,10 +113,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.xs,
-    marginBottom: Spacing.xs,
+    marginBottom: 4,
   },
   name: {
     ...Typography.h4,
+    fontSize: 17,
     flex: 1,
   },
   ratingRow: {
@@ -115,47 +127,49 @@ const styles = StyleSheet.create({
   },
   rating: {
     ...Typography.bodySmall,
-    fontWeight: '600',
+    fontWeight: '700',
+    fontSize: 15,
   },
   reviews: {
     ...Typography.caption,
+    fontSize: 13,
+  },
+  priceContainer: {
+    alignItems: 'flex-end',
+  },
+  priceLabel: {
+    ...Typography.caption,
+    fontSize: 11,
+    marginBottom: 2,
+  },
+  price: {
+    ...Typography.h3,
+    fontSize: 20,
+    fontWeight: '700',
+  },
+  priceUnit: {
+    ...Typography.caption,
+    fontSize: 11,
   },
   description: {
     ...Typography.bodySmall,
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.sm,
+    lineHeight: 20,
   },
   specialtiesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: Spacing.xs,
-    marginBottom: Spacing.md,
   },
   specialtyTag: {
     paddingHorizontal: Spacing.sm,
-    paddingVertical: 4,
+    paddingVertical: 5,
     borderRadius: BorderRadius.sm,
+    borderWidth: 1,
   },
   specialtyText: {
     ...Typography.caption,
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: Spacing.sm,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(128, 128, 128, 0.1)',
-  },
-  rateContainer: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 4,
-  },
-  rateLabel: {
-    ...Typography.caption,
-  },
-  rate: {
-    ...Typography.h4,
-    fontWeight: '700',
+    fontSize: 12,
+    fontWeight: '500',
   },
 });

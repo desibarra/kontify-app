@@ -6,7 +6,6 @@ import {
     Modal,
     TextInput,
     TouchableOpacity,
-    useColorScheme,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
@@ -28,8 +27,8 @@ export default function RequestUserDataModal({
     onSubmit,
     caseLevel = 'green',
 }: RequestUserDataModalProps) {
-    const colorScheme = useColorScheme();
-    const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+    // Always use dark theme
+    const colors = Colors.dark;
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');

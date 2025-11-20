@@ -12,13 +12,13 @@ import {
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Spacing, Typography, BorderRadius } from '../../constants/Colors';
+import { Colors, Typography, Spacing, BorderRadius, Shadows } from '../../constants/Colors';
 import { useAuth } from '../../hooks/useAuth';
 import { UserRole } from '../../constants/Types';
 
 export default function ProfileScreen() {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
+  // Always use dark theme
+  const colors = Colors.dark;
   const insets = useSafeAreaInsets();
   const { user, switchRole } = useAuth();
 

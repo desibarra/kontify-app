@@ -19,6 +19,10 @@ expo-env.d.ts
 # Metro
 .metro-health-check*
 
+# Build outputs (contains bundled env vars - DO NOT COMMIT)
+dist/
+web-build/
+
 # Archive/Backup
 /archive
 
@@ -38,3 +42,4 @@ app-example
 .env
 .env.local
 *.env
+.vercel

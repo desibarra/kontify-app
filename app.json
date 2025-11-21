@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "onspace-app",
-    "slug": "onspace-app",
+    "name": "Kontify",
+    "slug": "kontify-app",
+    "scheme": "kontify",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
@@ -42,6 +43,16 @@
         "projectId": "49d21666-13e1-4be8-bfbf-8693d8b88259"
       }
     },
-    "owner": "desibarra"
+    "owner": "desibarra",
+    "web": {
+      "favicon": "./assets/images/favicon.png",
+      "name": "Kontify - Expertos Fiscales y Legales",
+      "shortName": "Kontify",
+      "description": "Conecta con abogados, contadores y expertos verificados al instante con ayuda de IA.",
+      "themeColor": "#92BF4E",
+      "backgroundColor": "#000000",
+      "bundler": "metro",
+      "output": "static"
+    }
   }
 }

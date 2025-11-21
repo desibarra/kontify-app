@@ -469,6 +469,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         zIndex: 1,
+        pointerEvents: 'none', // No bloquear interacción con CTA
     },
     floatingCard: {
         position: 'absolute',
@@ -476,32 +477,34 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#333333',
         borderRadius: 16,
-        padding: 16,
+        padding: 12,
+        paddingHorizontal: 16,
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 12,
+        gap: 8,
         shadowColor: '#92BF4E',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,
         shadowRadius: 12,
+        maxWidth: 180, // Limitar ancho para evitar superposiciones
     },
     card1: {
-        top: 100,
-        left: 20,
+        top: 80,
+        left: 10,
     },
     card2: {
-        top: 200,
-        right: 20,
+        top: 180,
+        right: 10,
     },
     card3: {
-        bottom: 100,
-        left: '50%',
-        transform: [{ translateX: -80 }],
+        bottom: 120,
+        left: 20,
     },
     cardText: {
         color: '#FFFFFF',
-        fontSize: 14,
+        fontSize: 13,
         fontWeight: '600',
+        flexShrink: 1, // Permitir que el texto se ajuste
     },
 
     // VALUE SECTION

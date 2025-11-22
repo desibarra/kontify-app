@@ -48,21 +48,32 @@ export default function RoleSelectionScreen() {
     setSelectedRole(role);
     setIsLoading(true);
 
-    const { error } = await updateUserRole(user.id, role);
+    try {
+      const { error } = await updateUserRole(user.id, role);
 
-    setIsLoading(false);
+      setIsLoading(false);
 
-    if (error) {
-      Alert.alert('Error', 'No se pudo actualizar tu rol. Intenta nuevamente.');
+      if (error) {
+        Alert.alert('Error', 'No se pudo actualizar tu rol. Intenta nuevamente.');
+        setSelectedRole(null);
+        return;
+      }
+
+      // Navegación según el rol - Usar push en lugar de replace para web
+      if (role === 'expert') {
+        setTimeout(() => {
+          router.push('/experts-onboarding');
+        }, 500);
+      } else {
+        setTimeout(() => {
+          router.push('/(tabs)');
+        }, 500);
+      }
+    } catch (err) {
+      console.error('Error en handleRoleSelect:', err);
+      setIsLoading(false);
+      Alert.alert('Error', 'Algo salió mal. Intenta nuevamente.');
       setSelectedRole(null);
-      return;
-    }
-
-    // Navegación según el rol
-    if (role === 'expert') {
-      router.replace('/experts-onboarding');
-    } else {
-      router.replace('/(tabs)');
     }
   };
 

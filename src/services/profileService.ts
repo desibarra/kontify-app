@@ -113,11 +113,26 @@ export async function updateProfile(userId: string, updates: Partial<Profile>) {
 }
 
 export async function updateUserRole(userId: string, role: UserRole) {
-  const { error } = await supabase
-    .from("profiles")
-    .update({ role })
-    .eq("id", userId);
-  return { error };
+  try {
+    console.log(`🔄 Updating user ${userId} role to ${role}`);
+    
+    const { error, data } = await supabase
+      .from("profiles")
+      .update({ role })
+      .eq("id", userId)
+      .select();
+
+    if (error) {
+      console.error('❌ Error updating role:', error);
+      return { error };
+    }
+
+    console.log('✅ Role updated successfully:', data);
+    return { error: null };
+  } catch (err) {
+    console.error('❌ Exception in updateUserRole:', err);
+    return { error: err };
+  }
 }
 
 export async function updateProfileAvatar(userId: string, avatarUrl: string) {

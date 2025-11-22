@@ -1,38 +1,47 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, Text } from 'react-native';
 
 interface KontifyLogoProps {
   size?: 'small' | 'medium' | 'large';
   showText?: boolean;
 }
 
-export function KontifyLogo({ size = 'medium' }: KontifyLogoProps) {
+export function KontifyLogo({ size = 'medium', showText = true }: KontifyLogoProps) {
   const sizes = {
-    small: { width: 100, height: 40 },
-    medium: { width: 140, height: 56 },
-    large: { width: 180, height: 72 },
+    small: { icon: 40, text: 18, gap: 10 },
+    medium: { icon: 40, text: 20, gap: 10 },
+    large: { icon: 40, text: 24, gap: 12 },
   };
 
   const currentSize = sizes[size];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { gap: currentSize.gap }]}>
       <Image
         source={require('../../../assets/images/logo.png')}
-        style={[styles.logoImage, { width: currentSize.width, height: currentSize.height }]}
+        style={{ width: currentSize.icon, height: currentSize.icon }}
         resizeMode="contain"
       />
+      {showText && (
+        <Text style={[styles.text, { fontSize: currentSize.text }]}>
+          Kontify<Text style={styles.textAccent}>+</Text>
+        </Text>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'flex-start',
-    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  logoImage: {
-    width: '100%',
-    height: '100%',
+  text: {
+    color: '#FFFFFF',
+    fontWeight: '600',
+  },
+  textAccent: {
+    color: '#92BF4E',
+    fontWeight: '700',
   },
 });

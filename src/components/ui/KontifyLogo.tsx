@@ -18,7 +18,7 @@ export function KontifyLogo({ size = 'medium' }: KontifyLogoProps) {
   return (
     <View style={styles.container}>
       <Image
-        source={require('@/assets/images/logo.png')}
+        source={require('../../../assets/images/logo.png')}
         style={[styles.logoImage, { width: currentSize.width, height: currentSize.height }]}
         resizeMode="contain"
       />

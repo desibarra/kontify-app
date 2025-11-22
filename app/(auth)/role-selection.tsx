@@ -59,15 +59,12 @@ export default function RoleSelectionScreen() {
         return;
       }
 
-      // Navegación según el rol - Usar push en lugar de replace para web
+      // Navegación según el rol - Usar router.push directamente sin setTimeout
+      // El update en Supabase ya ha completado exitosamente
       if (role === 'expert') {
-        setTimeout(() => {
-          router.push('/experts-onboarding');
-        }, 500);
+        router.push('/experts-onboarding');
       } else {
-        setTimeout(() => {
-          router.push('/(tabs)');
-        }, 500);
+        router.push('/(tabs)');
       }
     } catch (err) {
       console.error('Error en handleRoleSelect:', err);

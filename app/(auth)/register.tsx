@@ -78,7 +78,11 @@ export default function RegisterScreen() {
     if (error) {
       Alert.alert('Error al registrarse', error.message);
     } else {
-      // Redirigir según el rol seleccionado
+      // IMPORTANTE: En web, el Alert.alert con callbacks tiene comportamiento inconsistente
+      // Por eso lo saltamos y navegamos directamente después de un pequeño delay
+      // para permitir que el perfil se cree en Supabase
+      
+      // Mostrar Alert pero también navegar después del delay
       Alert.alert(
         '¡Cuenta creada!',
         selectedRole === 'expert' 
@@ -88,17 +92,27 @@ export default function RegisterScreen() {
           {
             text: 'Continuar',
             onPress: () => {
-              // Si es experto, redirigir a completar perfil
-              if (selectedRole === 'expert') {
-                router.push('/experts-onboarding');
-              } else {
-                // Si es empresario, ir al dashboard
-                router.push('/(tabs)/index');
-              }
+              navigateAfterSignup();
             },
           },
         ]
       );
+
+      // Navegar automáticamente después de 1 segundo (fallback para web)
+      // Esto asegura que funcione incluso si el Alert callback falla
+      setTimeout(() => {
+        navigateAfterSignup();
+      }, 1000);
+    }
+  };
+
+  const navigateAfterSignup = () => {
+    // Si es experto, redirigir a completar perfil
+    if (selectedRole === 'expert') {
+      router.push('/experts-onboarding');
+    } else {
+      // Si es empresario, ir al dashboard
+      router.push('/(tabs)/index');
     }
   };
 

@@ -124,7 +124,7 @@ export default function DesignSystemExample() {
                     variant="outline"
                     size="md"
                     fullWidth
-                    rightIcon={<Ionicons name="arrow-forward" size={20} color="#92BF4E" />}
+                    rightIcon={<Ionicons name="arrow-forward" size={20} color="#93EC80" />}
                     onPress={() => console.log('Next pressed')}
                 >
                     Next Step

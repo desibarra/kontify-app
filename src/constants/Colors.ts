@@ -2,9 +2,9 @@ export const Colors = {
   // Premium Dark Theme - Default
   dark: {
     // Corporate Green Accents
-    primary: '#92BF4E',           // Bright lime green - CTAs, highlights
-    primaryHover: '#A3D05F',      // Brighter on hover
-    primaryActive: '#81AE3D',     // Darker on active
+    primary: '#93EC80',           // Verde oficial Kontify - CTAs, highlights
+    primaryHover: '#A4F091',      // Brighter on hover
+    primaryActive: '#82DB6F',     // Darker on active
     secondary: '#7FA646',         // Olive green - badges, tags
     accent: '#347361',            // Teal - secondary actions
     accentDark: '#025940',        // Deep teal - active states
@@ -22,7 +22,7 @@ export const Colors = {
     textMuted: '#666666',         // Muted gray - disabled text
 
     // Functional Colors
-    success: '#92BF4E',           // Use primary green for success
+    success: '#93EC80',           // Use primary green for success
     warning: '#FFA726',           // Warm orange
     error: '#EF5350',             // Soft red
     info: '#347361',              // Use accent teal for info
@@ -42,11 +42,11 @@ export const Colors = {
     // Interactive Elements
     inputBackground: '#1A1A1A',   // Input fields
     inputBorder: '#333333',       // Input borders
-    inputFocus: '#92BF4E',        // Input focus state
+    inputFocus: '#93EC80',        // Input focus state
 
     // Trust indicators
-    verified: '#92BF4E',          // Verified badge - use primary green
-    rating: '#92BF4E',            // Star ratings - use primary green
+    verified: '#93EC80',          // Verified badge - use primary green
+    rating: '#93EC80',            // Star ratings - use primary green
     premium: '#FFD700',           // Premium badge - gold
   },
   // Light mode kept for compatibility but app will use dark theme
@@ -55,7 +55,7 @@ export const Colors = {
     primaryHover: '#347361',
     primaryActive: '#004D3D',
     secondary: '#7FA646',
-    accent: '#92BF4E',
+    accent: '#93EC80',
     accentDark: '#347361',
 
     background: '#FFFFFF',
@@ -88,7 +88,7 @@ export const Colors = {
     inputFocus: '#025940',
 
     verified: '#7FA646',
-    rating: '#92BF4E',
+    rating: '#93EC80',
     premium: '#FFD700',
   },
 };
@@ -154,7 +154,7 @@ export const Shadows = {
     elevation: 12,
   },
   green: {
-    shadowColor: '#92BF4E',
+    shadowColor: '#93EC80',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 12,

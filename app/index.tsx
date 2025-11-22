@@ -46,15 +46,15 @@ export default function LandingPage() {
                     {!isDesktop && (
                         <View style={styles.mobileBadges}>
                             <View style={styles.mobileBadge}>
-                                <Ionicons name="shield-checkmark" size={20} color="#92BF4E" />
+                                <Ionicons name="shield-checkmark" size={20} color="#93EC80" />
                                 <Text style={styles.mobileBadgeText}>100% Seguro</Text>
                             </View>
                             <View style={styles.mobileBadge}>
-                                <Ionicons name="flash" size={20} color="#92BF4E" />
+                                <Ionicons name="flash" size={20} color="#93EC80" />
                                 <Text style={styles.mobileBadgeText}>Instantáneo</Text>
                             </View>
                             <View style={styles.mobileBadge}>
-                                <Ionicons name="people" size={20} color="#92BF4E" />
+                                <Ionicons name="people" size={20} color="#93EC80" />
                                 <Text style={styles.mobileBadgeText}>Expertos 24/7</Text>
                             </View>
                         </View>
@@ -81,7 +81,7 @@ export default function LandingPage() {
                         onPress={handleCTA}
                     >
                         <LinearGradient
-                            colors={['#92BF4E', '#7DA842']}
+                            colors={['#93EC80', '#82DB6F']}
                             style={styles.ctaGradient}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 1 }}
@@ -108,15 +108,15 @@ export default function LandingPage() {
                 {isDesktop && (
                     <View style={styles.floatingCards}>
                         <View style={[styles.floatingCard, styles.card1]}>
-                            <Ionicons name="shield-checkmark" size={24} color="#92BF4E" />
+                            <Ionicons name="shield-checkmark" size={24} color="#93EC80" />
                             <Text style={styles.cardText}>100% Seguro</Text>
                         </View>
                         <View style={[styles.floatingCard, styles.card2]}>
-                            <Ionicons name="flash" size={24} color="#92BF4E" />
+                            <Ionicons name="flash" size={24} color="#93EC80" />
                             <Text style={styles.cardText}>Instantáneo</Text>
                         </View>
                         <View style={[styles.floatingCard, styles.card3]}>
-                            <Ionicons name="people" size={24} color="#92BF4E" />
+                            <Ionicons name="people" size={24} color="#93EC80" />
                             <Text style={styles.cardText}>Expertos 24/7</Text>
                         </View>
                     </View>
@@ -139,10 +139,10 @@ export default function LandingPage() {
                     <View style={styles.benefitCard}>
                         <View style={styles.benefitIconContainer}>
                             <LinearGradient
-                                colors={['#92BF4E20', '#92BF4E10']}
+                                colors={['rgba(147, 236, 128, 0.12)', 'rgba(147, 236, 128, 0.06)']}
                                 style={styles.benefitIconBg}
                             >
-                                <Ionicons name="analytics" size={32} color="#92BF4E" />
+                                <Ionicons name="analytics" size={32} color="#93EC80" />
                             </LinearGradient>
                         </View>
                         <Text style={styles.benefitTitle}>Diagnóstico Inteligente</Text>
@@ -155,10 +155,10 @@ export default function LandingPage() {
                     <View style={styles.benefitCard}>
                         <View style={styles.benefitIconContainer}>
                             <LinearGradient
-                                colors={['#92BF4E20', '#92BF4E10']}
+                                colors={['rgba(147, 236, 128, 0.12)', 'rgba(147, 236, 128, 0.06)']}
                                 style={styles.benefitIconBg}
                             >
-                                <Ionicons name="chatbubbles" size={32} color="#92BF4E" />
+                                <Ionicons name="chatbubbles" size={32} color="#93EC80" />
                             </LinearGradient>
                         </View>
                         <Text style={styles.benefitTitle}>IA Fiscal Inmediata</Text>
@@ -171,10 +171,10 @@ export default function LandingPage() {
                     <View style={styles.benefitCard}>
                         <View style={styles.benefitIconContainer}>
                             <LinearGradient
-                                colors={['#92BF4E20', '#92BF4E10']}
+                                colors={['rgba(147, 236, 128, 0.12)', 'rgba(147, 236, 128, 0.06)']}
                                 style={styles.benefitIconBg}
                             >
-                                <Ionicons name="people-circle" size={32} color="#92BF4E" />
+                                <Ionicons name="people-circle" size={32} color="#93EC80" />
                             </LinearGradient>
                         </View>
                         <Text style={styles.benefitTitle}>Expertos Certificados</Text>
@@ -187,10 +187,10 @@ export default function LandingPage() {
                     <View style={styles.benefitCard}>
                         <View style={styles.benefitIconContainer}>
                             <LinearGradient
-                                colors={['#92BF4E20', '#92BF4E10']}
+                                colors={['rgba(147, 236, 128, 0.12)', 'rgba(147, 236, 128, 0.06)']}
                                 style={styles.benefitIconBg}
                             >
-                                <Ionicons name="lock-closed" size={32} color="#92BF4E" />
+                                <Ionicons name="lock-closed" size={32} color="#93EC80" />
                             </LinearGradient>
                         </View>
                         <Text style={styles.benefitTitle}>Total Confidencialidad</Text>
@@ -218,7 +218,7 @@ export default function LandingPage() {
                                 Describe tu situación fiscal en lenguaje natural. Sin formularios complicados.
                             </Text>
                         </View>
-                        <Ionicons name="chatbubble-ellipses-outline" size={48} color="#92BF4E40" style={styles.stepIcon} />
+                        <Ionicons name="chatbubble-ellipses-outline" size={48} color="rgba(147, 236, 128, 0.25)" style={styles.stepIcon} />
                     </View>
 
                     {/* Connector */}
@@ -235,7 +235,7 @@ export default function LandingPage() {
                                 Obtén un diagnóstico detallado con recomendaciones específicas para tu caso.
                             </Text>
                         </View>
-                        <Ionicons name="bulb-outline" size={48} color="#92BF4E40" style={styles.stepIcon} />
+                        <Ionicons name="bulb-outline" size={48} color="rgba(147, 236, 128, 0.25)" style={styles.stepIcon} />
                     </View>
 
                     {/* Connector */}
@@ -252,7 +252,7 @@ export default function LandingPage() {
                                 Si necesitas más ayuda, habla directamente con un profesional certificado.
                             </Text>
                         </View>
-                        <Ionicons name="person-circle-outline" size={48} color="#92BF4E40" style={styles.stepIcon} />
+                        <Ionicons name="person-circle-outline" size={48} color="rgba(147, 236, 128, 0.25)" style={styles.stepIcon} />
                     </View>
                 </View>
             </View>
@@ -261,15 +261,15 @@ export default function LandingPage() {
             <View style={styles.trustSection}>
                 <View style={styles.trustBadges}>
                     <View style={styles.trustBadge}>
-                        <Ionicons name="shield-checkmark" size={32} color="#92BF4E" />
+                        <Ionicons name="shield-checkmark" size={32} color="#93EC80" />
                         <Text style={styles.trustBadgeText}>Datos Encriptados</Text>
                     </View>
                     <View style={styles.trustBadge}>
-                        <Ionicons name="checkmark-circle" size={32} color="#92BF4E" />
+                        <Ionicons name="checkmark-circle" size={32} color="#93EC80" />
                         <Text style={styles.trustBadgeText}>Expertos Verificados</Text>
                     </View>
                     <View style={styles.trustBadge}>
-                        <Ionicons name="time" size={32} color="#92BF4E" />
+                        <Ionicons name="time" size={32} color="#93EC80" />
                         <Text style={styles.trustBadgeText}>Disponible 24/7</Text>
                     </View>
                 </View>
@@ -291,7 +291,7 @@ export default function LandingPage() {
                     <View style={styles.testimonialCard}>
                         <View style={styles.stars}>
                             {[1, 2, 3, 4, 5].map((star) => (
-                                <Ionicons key={star} name="star" size={16} color="#92BF4E" />
+                                <Ionicons key={star} name="star" size={16} color="#93EC80" />
                             ))}
                         </View>
                         <Text style={styles.testimonialText}>
@@ -312,7 +312,7 @@ export default function LandingPage() {
                     <View style={styles.testimonialCard}>
                         <View style={styles.stars}>
                             {[1, 2, 3, 4, 5].map((star) => (
-                                <Ionicons key={star} name="star" size={16} color="#92BF4E" />
+                                <Ionicons key={star} name="star" size={16} color="#93EC80" />
                             ))}
                         </View>
                         <Text style={styles.testimonialText}>
@@ -333,7 +333,7 @@ export default function LandingPage() {
                     <View style={styles.testimonialCard}>
                         <View style={styles.stars}>
                             {[1, 2, 3, 4, 5].map((star) => (
-                                <Ionicons key={star} name="star" size={16} color="#92BF4E" />
+                                <Ionicons key={star} name="star" size={16} color="#93EC80" />
                             ))}
                         </View>
                         <Text style={styles.testimonialText}>
@@ -372,7 +372,7 @@ export default function LandingPage() {
                         onPress={handleCTA}
                     >
                         <LinearGradient
-                            colors={['#92BF4E', '#7DA842']}
+                            colors={['#93EC80', '#82DB6F']}
                             style={styles.ctaGradient}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 1 }}
@@ -451,12 +451,12 @@ const styles = StyleSheet.create({
     badge: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#92BF4E20',
+        backgroundColor: 'rgba(147, 236, 128, 0.12)',
         paddingHorizontal: 16,
         paddingVertical: 8,
         borderRadius: 20,
         borderWidth: 1,
-        borderColor: '#92BF4E40',
+        borderColor: 'rgba(147, 236, 128, 0.25)',
         marginBottom: 32,
         marginTop: 20, // Espacio adicional desde el logo
     },
@@ -464,11 +464,11 @@ const styles = StyleSheet.create({
         width: 8,
         height: 8,
         borderRadius: 4,
-        backgroundColor: '#92BF4E',
+        backgroundColor: '#93EC80',
         marginRight: 8,
     },
     badgeText: {
-        color: '#92BF4E',
+        color: '#93EC80',
         fontSize: 13,
         fontWeight: '600',
         letterSpacing: 0.5,
@@ -483,7 +483,7 @@ const styles = StyleSheet.create({
         letterSpacing: -1,
     },
     heroTitleAccent: {
-        color: '#92BF4E',
+        color: '#93EC80',
     },
     heroSubtitle: {
         fontSize: 18,
@@ -525,7 +525,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     loginTextBold: {
-        color: '#92BF4E',
+        color: '#93EC80',
         fontWeight: '600',
     },
     trustLine: {
@@ -583,7 +583,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 8,
-        shadowColor: '#92BF4E',
+        shadowColor: '#93EC80',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,
         shadowRadius: 12,
@@ -705,7 +705,7 @@ const styles = StyleSheet.create({
         width: 48,
         height: 48,
         borderRadius: 24,
-        backgroundColor: '#92BF4E',
+        backgroundColor: '#93EC80',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -766,7 +766,7 @@ const styles = StyleSheet.create({
     guarantee: {
         backgroundColor: '#0f0f0f',
         borderWidth: 1,
-        borderColor: '#92BF4E40',
+        borderColor: 'rgba(147, 236, 128, 0.25)',
         borderRadius: 16,
         padding: 32,
         maxWidth: 600,
@@ -775,7 +775,7 @@ const styles = StyleSheet.create({
     guaranteeTitle: {
         fontSize: 24,
         fontWeight: '700',
-        color: '#92BF4E',
+        color: '#93EC80',
         marginBottom: 12,
         textAlign: 'center',
     },
@@ -829,7 +829,7 @@ const styles = StyleSheet.create({
         width: 48,
         height: 48,
         borderRadius: 24,
-        backgroundColor: '#92BF4E',
+        backgroundColor: '#93EC80',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -891,7 +891,7 @@ const styles = StyleSheet.create({
     footerBrand: {
         fontSize: 24,
         fontWeight: '800',
-        color: '#92BF4E',
+        color: '#93EC80',
         marginBottom: 8,
     },
     footerTagline: {

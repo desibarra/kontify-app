@@ -171,11 +171,51 @@ Tienes **3 preguntas gratuitas**.`,
     return summary;
   }, [messages, caseLevel]);
 
-  // Guardar datos de contacto del usuario
-  const saveUserContactData = useCallback((data: UserContactData) => {
+  // Guardar datos de contacto del usuario Y crear lead en Supabase
+  const saveUserContactData = useCallback(async (data: UserContactData) => {
     setUserContactData(data);
     setNeedsUserData(false);
-  }, []);
+
+    // Generar resumen del caso
+    const summary = aiService.generateCaseSummary(messages, caseLevel);
+    setCaseSummary(summary);
+
+    // NUEVO: Crear lead real en Supabase
+    try {
+      console.log('📝 Creando lead en Supabase desde chat IA...');
+      
+      // Importar leadsService dinámicamente para evitar dependencias circulares
+      const { leadsService } = await import('../services/leadsService');
+
+      const leadData = {
+        user_id: userId,
+        title: summary.userQuery.substring(0, 100) || 'Consulta desde Chat IA',
+        description: summary.userQuery || 'Consulta generada por el asistente IA',
+        specialty: summary.detectedSpecialties[0] || 'Consultoría General',
+        status: 'open' as const,
+        priority: summary.urgency as 'low' | 'medium' | 'high' | 'urgent',
+        metadata: {
+          fromAIChat: true,
+          caseLevel: summary.level,
+          detectedSpecialties: summary.detectedSpecialties,
+          conversationContext: summary.conversationContext.substring(0, 1000), // Limitar tamaño
+          userContactData: data,
+          generatedAt: summary.generatedAt.toISOString(),
+        },
+      };
+
+      const createdLead = await leadsService.createLead(leadData);
+
+      if (createdLead) {
+        console.log('✅ Lead creado exitosamente:', createdLead.id);
+      } else {
+        console.error('❌ No se pudo crear el lead');
+      }
+    } catch (error) {
+      console.error('❌ Error creating lead from AI chat:', error);
+      // No bloqueamos el flujo si falla la creación del lead
+    }
+  }, [messages, caseLevel, userId]);
 
   // Activar solicitud de datos de usuario
   const triggerRequestUserData = useCallback(() => {

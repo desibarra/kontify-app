@@ -122,7 +122,7 @@ export default function LoginScreen() {
             disabled={isLoading}
           >
             <LinearGradient
-              colors={['#92BF4E', '#7DA842']}
+              colors={['#93EC80', '#82DB6F']}
               style={styles.loginGradient}
             >
               {isLoading ? (
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     fontSize: 14,
-    color: '#92BF4E',
+    color: '#93EC80',
   },
   footer: {
     flexDirection: 'row',
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
   registerLink: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#92BF4E',
+    color: '#93EC80',
   },
   backButton: {
     flexDirection: 'row',

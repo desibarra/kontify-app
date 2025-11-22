@@ -27,24 +27,27 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
-  console.log("🏠 RENDERIZANDO HOMESCREEN");
+  console.log("🏠 RENDERIZANDO HOMESCREEN - CONECTADO A SUPABASE");
 
   const { experts = [], loading, searchExperts } = useExperts();
-  console.log("📊 ESTADO EXPERTS:", { count: experts?.length, loading });
+  console.log("📊 ESTADO EXPERTS (REAL):", { count: experts?.length, loading, hasData: experts?.length > 0 });
 
   const [refreshing, setRefreshing] = useState(false);
 
   const handleSearch = async (query: string, specialty?: Specialty, service?: ServiceType) => {
+    console.log("🔍 Buscando expertos con:", { query, specialty, service });
     await searchExperts(query, specialty, service);
   };
 
   const handleRefresh = async () => {
+    console.log("🔄 Refrescando lista de expertos...");
     setRefreshing(true);
     await searchExperts('');
     setRefreshing(false);
   };
 
   const navigateToExpert = (expertId: string) => {
+    console.log("➡️ Navegando a experto:", expertId);
     router.push({
       pathname: '/expert-detail',
       params: { id: expertId },
@@ -67,22 +70,12 @@ export default function HomeScreen() {
 
         <SearchBar onSearch={handleSearch} />
 
-        {/* DIAGNÓSTICO VISUAL QA */}
-        {experts.length === 0 && !loading && !refreshing && (
-          <View style={{ padding: 20, alignItems: 'center' }}>
-            <Text style={{ color: 'orange', textAlign: 'center', marginBottom: 10 }}>
-              ⚠️ QA DIAGNOSTIC: Lista vacía
-            </Text>
-            <Text style={{ color: colors.textSecondary, textAlign: 'center' }}>
-              Si ves esto, la conexión a Supabase funcionó pero no trajo datos, o falló silenciosamente.
-              Revisa la terminal para ver los logs detallados.
-            </Text>
-          </View>
-        )}
-
         {loading && !refreshing ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={colors.primary} />
+            <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
+              Cargando expertos desde Supabase...
+            </Text>
           </View>
         ) : (
           <FlatList
@@ -102,7 +95,9 @@ export default function HomeScreen() {
                   No se encontraron expertos
                 </Text>
                 <Text style={[styles.emptySubtext, { color: colors.textTertiary }]}>
-                  Intenta ajustar tus filtros de búsqueda
+                  {!loading && experts.length === 0 
+                    ? "La base de datos aún no tiene expertos registrados. Prueba registrándote como experto."
+                    : "Intenta ajustar tus filtros de búsqueda"}
                 </Text>
               </View>
             }
@@ -141,6 +136,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    gap: Spacing.md,
+  },
+  loadingText: {
+    ...Typography.body,
+    fontSize: 14,
   },
   listContent: {
     paddingBottom: Spacing.xxl,

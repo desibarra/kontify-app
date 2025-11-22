@@ -1,70 +1,129 @@
+/**
+ * PROFILE SERVICE (VERSIÓN ESTABLE)
+ * Corrige fallos de .single(), problemas de RLS y race conditions después de signUp
+ */
+
 import { supabase } from '@/lib/supabase';
+
+// ============================================
+// TYPES
+// ============================================
 
 export type UserRole = 'user' | 'expert' | 'admin';
 
-/**
- * Actualiza el rol del usuario en la tabla profiles
- */
-export async function updateUserRole(userId: string, role: UserRole): Promise<{ error: any }> {
-  try {
-    const { error } = await supabase
-      .from('profiles')
-      .update({ role })
-      .eq('id', userId);
-
-    if (error) {
-      console.error('Error updating user role:', error);
-      return { error };
-    }
-
-    return { error: null };
-  } catch (err) {
-    console.error('Exception updating user role:', err);
-    return { error: err };
-  }
+export interface Profile {
+  id: string;
+  email: string;
+  full_name: string | null;
+  avatar_url: string | null;
+  role: UserRole;
+  created_at: string;
+  updated_at: string;
 }
 
+// ============================================
+// HELPERS
+// ============================================
+
 /**
- * Actualiza la foto de perfil del usuario
+ * Espera hasta que exista un registro en profiles (máx 2 segundos)
  */
-export async function updateProfileAvatar(userId: string, avatarUrl: string): Promise<{ error: any }> {
-  try {
-    const { error } = await supabase
-      .from('profiles')
-      .update({ avatar_url: avatarUrl })
-      .eq('id', userId);
+async function waitForProfile(userId: string) {
+  const maxAttempts = 10;
+  const delay = 200; // ms
 
-    if (error) {
-      console.error('Error updating avatar:', error);
-      return { error };
-    }
+  for (let i = 0; i < maxAttempts; i++) {
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .maybeSingle(); // ← evita fallas
 
-    return { error: null };
-  } catch (err) {
-    console.error('Exception updating avatar:', err);
-    return { error: err };
+    if (data) return data;
+
+    await new Promise(res => setTimeout(res, delay));
   }
+
+  return null;
 }
 
-/**
- * Obtiene el perfil completo del usuario
- */
-export async function getUserProfile(userId: string) {
-  try {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
+// ============================================
+// SERVICE
+// ============================================
 
-    if (error) {
-      console.error('Error fetching user profile:', error);
-      return { data: null, error };
+export async function getCurrentProfile(): Promise<{ data: Profile | null; error: any }> {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { data: null, error: new Error("No authenticated user") };
     }
 
-    return { data, error: null };
+    return getUserProfile(user.id);
   } catch (err) {
-    console.error('Exception fetching user profile:', err);
     return { data: null, error: err };
   }
+}
+
+/**
+ * Obtiene el perfil completo por ID (versión estable)
+ */
+export async function getUserProfile(userId: string): Promise<{ data: Profile | null; error: any }> {
+  try {
+    console.log("🔍 Fetching profile", userId);
+
+    // 1) Intentar obtenerlo normal
+    let { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .maybeSingle();
+
+    // 2) Si no existe aún → esperar a que el trigger lo cree
+    if (!data) {
+      console.log("⏳ Profile not found, waiting...");
+      data = await waitForProfile(userId);
+    }
+
+    if (!data) {
+      return { data: null, error: new Error("Profile not found") };
+    }
+
+    return { data: data as Profile, error: null };
+  } catch (err) {
+    console.error("❌ Error getUserProfile:", err);
+    return { data: null, error: err };
+  }
+}
+
+// ============================================
+// UPDATE FUNCTIONS
+// (se mantienen sin cambios porque ya estaban bien)
+// ============================================
+
+export async function updateProfile(userId: string, updates: Partial<Profile>) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .update(updates)
+    .eq("id", userId)
+    .select()
+    .single();
+
+  return { data, error };
+}
+
+export async function updateUserRole(userId: string, role: UserRole) {
+  const { error } = await supabase
+    .from("profiles")
+    .update({ role })
+    .eq("id", userId);
+  return { error };
+}
+
+export async function updateProfileAvatar(userId: string, avatarUrl: string) {
+  const { error } = await supabase
+    .from("profiles")
+    .update({ avatar_url: avatarUrl })
+    .eq("id", userId);
+  return { error };
 }

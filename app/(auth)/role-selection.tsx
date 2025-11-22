@@ -28,7 +28,7 @@ export default function RoleSelectionScreen() {
       title: 'Usuario',
       description: 'Busco asesoría fiscal y legal con ayuda de IA',
       icon: 'person' as const,
-      color: '#92BF4E',
+      color: '#93EC80',
     },
     {
       id: 'expert' as UserRole,
@@ -174,8 +174,8 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.98 }],
   },
   roleCardSelected: {
-    borderColor: '#92BF4E',
-    backgroundColor: '#92BF4E10',
+    borderColor: '#93EC80',
+    backgroundColor: 'rgba(147, 236, 128, 0.06)',
   },
   iconContainer: {
     width: 100,

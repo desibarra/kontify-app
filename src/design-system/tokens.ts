@@ -19,9 +19,9 @@
 export const colors = {
     // Brand Colors
     brand: {
-        primary: '#92BF4E',      // Verde Kontify
-        primaryDark: '#7AA63E',
-        primaryLight: '#A8D066',
+        primary: '#93EC80',      // Verde oficial Kontify
+        primaryDark: '#82DB6F',
+        primaryLight: '#A4F091',
         secondary: '#1a1a1a',
         accent: '#3B82F6',
     },
@@ -41,7 +41,7 @@ export const colors = {
         // Borders
         border: '#333333',
         borderSubtle: '#222222',
-        borderFocus: '#92BF4E',
+        borderFocus: '#93EC80',
 
         // States
         success: '#10B981',
@@ -64,7 +64,7 @@ export const colors = {
         foregroundSubtle: '#9CA3AF',
         border: '#E5E7EB',
         borderSubtle: '#F3F4F6',
-        borderFocus: '#92BF4E',
+        borderFocus: '#93EC80',
         success: '#10B981',
         warning: '#F59E0B',
         error: '#EF4444',
@@ -205,7 +205,7 @@ export const shadows = {
     // Glow effects
     glow: {
         primary: {
-            shadowColor: '#92BF4E',
+            shadowColor: '#93EC80',
             shadowOffset: { width: 0, height: 0 },
             shadowOpacity: 0.3,
             shadowRadius: 8,

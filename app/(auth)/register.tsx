@@ -200,7 +200,7 @@ export default function RegisterScreen() {
             disabled={isLoading}
           >
             <LinearGradient
-              colors={['#92BF4E', '#7DA842']}
+              colors={['#93EC80', '#82DB6F']}
               style={styles.registerGradient}
             >
               {isLoading ? (
@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   termsLink: {
-    color: '#92BF4E',
+    color: '#93EC80',
     fontWeight: '600',
   },
   footer: {
@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
   loginLink: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#92BF4E',
+    color: '#93EC80',
   },
   backButton: {
     flexDirection: 'row',

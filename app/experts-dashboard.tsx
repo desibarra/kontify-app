@@ -13,8 +13,11 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Typography, Spacing } from '@/constants/Colors';
 import { expertApplicationService, ExpertMetrics, ExpertInsights } from '@/services/expertApplicationService';
+import { expertsService } from '@/services/expertsService';
+import { leadsService } from '@/services/leadsService';
 import { useExpertStatus } from '@/hooks/useExpertStatus';
 import { useRealTimeMessages } from '@/hooks/useRealTimeMessages';
+import { useAuth } from '@/hooks/useAuth';
 
 type VerificationStatus = 'pending' | 'approved' | 'rejected';
 
@@ -22,6 +25,7 @@ export default function ExpertsDashboardScreen() {
     // Always use dark theme
     const colors = Colors.dark;
     const router = useRouter();
+    const { user, profile } = useAuth(); // Usar datos reales del AuthContext
     const { status, setStatus, notifications, unreadCount, markAsRead, refreshNotifications } = useExpertStatus();
     const { unreadCount: unreadMessagesCount, hasNewMessages } = useRealTimeMessages();
 
@@ -32,39 +36,113 @@ export default function ExpertsDashboardScreen() {
     const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
     const [metrics, setMetrics] = useState<ExpertMetrics | null>(null);
     const [insights, setInsights] = useState<ExpertInsights | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        loadExpertData();
-    }, []);
+        if (user && profile) {
+            loadExpertData();
+        }
+    }, [user, profile]);
 
     const loadExpertData = async () => {
-        // Load expert data
-        const profile = expertApplicationService.getProfessionalProfile();
-        if (profile) {
-            setExpertData(profile);
+        try {
+            console.log('📊 Cargando datos del experto desde Supabase...');
+            setLoading(true);
+
+            if (!user) {
+                console.error('❌ No hay usuario autenticado');
+                return;
+            }
+
+            // NUEVO: Obtener datos reales del experto desde Supabase
+            const expertProfile = await expertsService.getExpertByUserId(user.id);
+
+            if (expertProfile) {
+                console.log('✅ Perfil de experto encontrado:', expertProfile.specialty);
+                setExpertData(expertProfile);
+                setVerificationStatus(expertProfile.status as VerificationStatus);
+
+                // NUEVO: Obtener estadísticas reales desde la función RPC de Supabase
+                const realStats = await expertsService.getExpertStats(expertProfile.id);
+                if (realStats) {
+                    console.log('✅ Estadísticas reales cargadas:', realStats);
+                    setLeadCount(Number(realStats.total_leads) || 0);
+                    
+                    // Convertir stats de Supabase a formato de métricas
+                    const realMetrics: ExpertMetrics = {
+                        totalLeads: Number(realStats.total_leads) || 0,
+                        greenCount: 0, // Estos los calculamos más adelante con los leads filtrados
+                        yellowCount: 0,
+                        redCount: 0,
+                        topSpecialty: expertProfile.specialty,
+                        conversionRate: 0,
+                        avgResponseTime: 15,
+                    };
+                    setMetrics(realMetrics);
+                }
+
+                // NUEVO: Obtener leads reales asignados al experto
+                const realLeads = await leadsService.getLeadsAssignedToExpert(expertProfile.id);
+                console.log(`✅ ${realLeads.length} leads reales cargados`);
+
+                // Calcular métricas basadas en leads reales
+                if (realLeads.length > 0) {
+                    const priorityCounts = {
+                        low: realLeads.filter(l => l.priority === 'low').length,
+                        medium: realLeads.filter(l => l.priority === 'medium').length,
+                        high: realLeads.filter(l => l.priority === 'high').length,
+                        urgent: realLeads.filter(l => l.priority === 'urgent').length,
+                    };
+
+                    setMetrics(prev => ({
+                        ...prev!,
+                        greenCount: priorityCounts.low,
+                        yellowCount: priorityCounts.medium,
+                        redCount: priorityCounts.high + priorityCounts.urgent,
+                    }));
+                }
+
+                // Profile completion basado en datos reales
+                const missingFields = [];
+                if (!expertProfile.bio) missingFields.push('Biografía');
+                if (!expertProfile.hourly_rate || expertProfile.hourly_rate === 0) missingFields.push('Tarifa');
+                if (!expertProfile.certifications || expertProfile.certifications.length === 0) missingFields.push('Certificaciones');
+                
+                setProfileCompletion({
+                    isComplete: missingFields.length === 0,
+                    missingFields,
+                });
+            } else {
+                console.log('⚠️ Usuario no registrado como experto, usando datos de aplicación...');
+                // Fallback a expertApplicationService si no está en Supabase aún
+                const profile = expertApplicationService.getProfessionalProfile();
+                if (profile) {
+                    setExpertData(profile);
+                }
+
+                const completion = expertApplicationService.getProfileCompletionStatus();
+                setProfileCompletion(completion);
+
+                const leads = await expertApplicationService.getAllLeads();
+                setLeadCount(leads.length);
+
+                const calculatedMetrics = await expertApplicationService.calculateMetrics();
+                setMetrics(calculatedMetrics);
+            }
+
+            // Load selected plan (esto aún es local)
+            const plan = expertApplicationService.getSelectedPlan();
+            setSelectedPlan(plan);
+
+            // Generate insights (usando datos calculados)
+            const generatedInsights = expertApplicationService.generateInsights();
+            setInsights(generatedInsights);
+
+        } catch (error) {
+            console.error('❌ Error cargando datos del experto:', error);
+        } finally {
+            setLoading(false);
         }
-
-        // Check profile completion
-        const completion = expertApplicationService.getProfileCompletionStatus();
-        setProfileCompletion(completion);
-
-        // Load leads count
-        const leads = await expertApplicationService.getAllLeads();
-        setLeadCount(leads.length);
-
-        // Load selected plan
-        const plan = expertApplicationService.getSelectedPlan();
-        setSelectedPlan(plan);
-
-        // Calculate metrics and insights
-        const calculatedMetrics = await expertApplicationService.calculateMetrics();
-        setMetrics(calculatedMetrics);
-
-        const generatedInsights = expertApplicationService.generateInsights();
-        setInsights(generatedInsights);
-
-        // Simulate verification status (in real app, this would come from backend)
-        setVerificationStatus('pending');
     };
 
     const handleLogout = () => {
@@ -118,11 +196,12 @@ export default function ExpertsDashboardScreen() {
         }
     };
 
-    if (!expertData) {
+    if (loading || !expertData) {
         return (
-            <View style={[styles.container, { backgroundColor: colors.background }]}>
-                <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
-                    Cargando dashboard...
+            <View style={[styles.container, { backgroundColor: colors.background }, { justifyContent: 'center', alignItems: 'center' }]}>
+                <ActivityIndicator size="large" color={colors.primary} />
+                <Text style={[styles.loadingText, { color: colors.textSecondary, marginTop: Spacing.md }]}>
+                    {loading ? 'Cargando datos desde Supabase...' : 'Cargando dashboard...'}
                 </Text>
             </View>
         );

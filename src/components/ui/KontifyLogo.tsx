@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   textAccent: {
-    color: '#92BF4E',
+    color: '#93EC80',
     fontWeight: '700',
   },
 });

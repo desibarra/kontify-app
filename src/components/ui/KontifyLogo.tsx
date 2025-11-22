@@ -17,11 +17,8 @@ export function KontifyLogo({ size = 'medium', showText = true }: KontifyLogoPro
 
   const currentSize = sizes[size];
 
-  // DEBUG: Log para verificar renderizado
-  console.log('🔍 KontifyLogo rendering - size:', size, 'showText:', showText);
-
   return (
-    <View style={[styles.container, styles.debugContainer]}>
+    <View style={styles.container}>
       <LinearGradient
         colors={['#92BF4E', '#7DA842']}
         style={[styles.iconContainer, { width: currentSize.container, height: currentSize.container }]}
@@ -44,15 +41,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-  },
-  debugContainer: {
-    // DEBUG: Fondo amarillo brillante para detectar el componente
-    backgroundColor: 'rgba(255, 255, 0, 0.5)',
     padding: 8,
-    borderWidth: 2,
-    borderColor: '#FF0000',
-    minWidth: 150,
-    minHeight: 50,
   },
   iconContainer: {
     borderRadius: 10,

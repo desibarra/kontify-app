@@ -10,9 +10,6 @@ export default function LandingPage() {
     const { width } = useWindowDimensions();
     const isDesktop = width >= 768; // Breakpoint para tablet/desktop
 
-    // DEBUG: Verificar que el componente se renderiza
-    console.log('📱 LandingPage rendering - width:', width, 'isDesktop:', isDesktop);
-
     const handleCTA = () => {
         router.push('/(auth)/register');
     };
@@ -26,23 +23,27 @@ export default function LandingPage() {
     };
 
     return (
-        <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-            {/* HERO SECTION */}
-            <LinearGradient
-                colors={['#000000', '#0a0a0a', '#111111']}
-                style={styles.hero}
-            >
-                <View style={styles.heroContent}>
-                    {/* Logo Header */}
-                    <View style={styles.logoHeader}>
-                        <KontifyLogo size="large" />
-                    </View>
+        <View style={styles.container}>
+            {/* FIXED HEADER */}
+            <View style={styles.header}>
+                <KontifyLogo size="medium" />
+                <Pressable onPress={handleLogin} style={styles.headerLoginButton}>
+                    <Text style={styles.headerLoginText}>Inicia sesión</Text>
+                </Pressable>
+            </View>
 
-                    {/* Badge */}
-                    <View style={styles.badge}>
-                        <View style={styles.badgeDot} />
-                        <Text style={styles.badgeText}>Impulsado por IA Avanzada</Text>
-                    </View>
+            <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+                {/* HERO SECTION */}
+                <LinearGradient
+                    colors={['#000000', '#0a0a0a', '#111111']}
+                    style={styles.hero}
+                >
+                    <View style={styles.heroContent}>
+                        {/* Badge */}
+                        <View style={styles.badge}>
+                            <View style={styles.badgeDot} />
+                            <Text style={styles.badgeText}>Impulsado por IA Avanzada</Text>
+                        </View>
 
                     {/* Mobile: Badges en flujo normal */}
                     {!isDesktop && (
@@ -409,7 +410,8 @@ export default function LandingPage() {
                     © 2025 Kontify+. Todos los derechos reservados.
                 </Text>
             </View>
-        </ScrollView>
+            </ScrollView>
+        </View>
     );
 }
 
@@ -418,10 +420,47 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#000000',
     },
+    scrollContainer: {
+        flex: 1,
+    },
+
+    // FIXED HEADER
+    header: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 70,
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        borderBottomWidth: 1,
+        borderBottomColor: '#1a1a1a',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 24,
+        zIndex: 1000,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    headerLoginButton: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#92BF4E',
+    },
+    headerLoginText: {
+        color: '#92BF4E',
+        fontSize: 14,
+        fontWeight: '600',
+    },
 
     // HERO SECTION
     hero: {
-        paddingTop: 80,
+        paddingTop: 120, // Espacio para el header fijo
         paddingBottom: 120,
         paddingHorizontal: 24,
         position: 'relative',
@@ -430,15 +469,6 @@ const styles = StyleSheet.create({
     heroContent: {
         alignItems: 'center',
         zIndex: 2,
-    },
-    logoHeader: {
-        marginBottom: 24,
-        // DEBUG: Asegurar visibilidad
-        width: '100%',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 255, 0, 0.2)', // Verde claro para debug
-        padding: 12,
-        zIndex: 9999,
     },
     badge: {
         flexDirection: 'row',

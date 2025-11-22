@@ -4,6 +4,11 @@
     "devCommand": "npx expo start --web",
     "installCommand": "npm install --legacy-peer-deps",
     "framework": null,
+    "build": {
+        "env": {
+            "NPM_FLAGS": "--legacy-peer-deps"
+        }
+    },
     "rewrites": [
         {
             "source": "/api/:path*",

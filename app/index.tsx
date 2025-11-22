@@ -10,6 +10,9 @@ export default function LandingPage() {
     const { width } = useWindowDimensions();
     const isDesktop = width >= 768; // Breakpoint para tablet/desktop
 
+    // DEBUG: Verificar que el componente se renderiza
+    console.log('📱 LandingPage rendering - width:', width, 'isDesktop:', isDesktop);
+
     const handleCTA = () => {
         router.push('/(auth)/register');
     };
@@ -430,6 +433,12 @@ const styles = StyleSheet.create({
     },
     logoHeader: {
         marginBottom: 24,
+        // DEBUG: Asegurar visibilidad
+        width: '100%',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 255, 0, 0.2)', // Verde claro para debug
+        padding: 12,
+        zIndex: 9999,
     },
     badge: {
         flexDirection: 'row',

@@ -1,11 +1,11 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme, Platform } from 'react-native';
+import { Image } from 'expo-image';
 import { Colors, Spacing } from '@/constants/Colors';
 import { useAuth } from '@/hooks/useAuth';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useExpertStatus } from '@/hooks/useExpertStatus';
-import { KontifyLogo } from '@/components/ui/KontifyLogo';
 
 export default function TabLayout() {
   // Always use dark theme
@@ -53,25 +53,29 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          headerTitle: () => <KontifyLogo size="small" />,
+          title: 'Expertos',
           tabBarIcon: ({ color, size }) => <Ionicons name="search" size={size} color={color} />,
-          tabBarLabel: 'Expertos',
+          headerLeft: () => (
+            <Image
+              source={require('../../assets/images/logo-kontify.png')}
+              style={{ width: 36, height: 36, marginLeft: Spacing.md }}
+              contentFit="contain"
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="ai-chat"
         options={{
-          headerTitle: () => <KontifyLogo size="small" />,
+          title: 'Asistente IA',
           tabBarIcon: ({ color, size }) => <Ionicons name="sparkles" size={size} color={color} />,
-          tabBarLabel: 'Asistente IA',
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          headerTitle: () => <KontifyLogo size="small" />,
+          title: 'Mi Cuenta',
           tabBarIcon: ({ color, size }) => <Ionicons name="person" size={size} color={color} />,
-          tabBarLabel: 'Mi Cuenta',
           tabBarBadge: unreadCount > 0 ? unreadCount : undefined,
         }}
       />
@@ -79,9 +83,8 @@ export default function TabLayout() {
         <Tabs.Screen
           name="admin"
           options={{
-            headerTitle: () => <KontifyLogo size="small" />,
+            title: 'Admin',
             tabBarIcon: ({ color, size }) => <Ionicons name="shield-checkmark" size={size} color={color} />,
-            tabBarLabel: 'Admin',
           }}
         />
       )}

@@ -1,0 +1,77 @@
+{
+  "backup_name": "fase6_auth_complete",
+  "version": "6.0.0",
+  "date": "2024-11-21",
+  "timestamp": "2024-11-21T00:00:00Z",
+  "description": "Sistema de autenticación completo con Supabase + UI móvil optimizada (Mobile-First)",
+  "status": "production_ready",
+  "features": [
+    "Login/Register screens con validación",
+    "Protección de rutas con middleware",
+    "Sesión persistente con AsyncStorage",
+    "UI Landing Page responsive (Mobile-First)",
+    "Badges flotantes solo en desktop (≥768px)",
+    "Badges en flujo normal en móvil (<768px)",
+    "AuthContext con Supabase real-time listeners"
+  ],
+  "fixes": [
+    "UI móvil: Badges no se superponen en pantallas pequeñas",
+    "Diseño responsive con useWindowDimensions",
+    "Breakpoint en 768px para móvil/desktop"
+  ],
+  "dependencies": {
+    "react-native": "0.76.5",
+    "expo": "~54.0.0",
+    "supabase": "^2.50.0",
+    "expo-router": "~6.0.15",
+    "react-native-url-polyfill": "^3.0.0"
+  },
+  "environment_variables": [
+    "EXPO_PUBLIC_SUPABASE_URL",
+    "EXPO_PUBLIC_SUPABASE_ANON_KEY",
+    "EXPO_PUBLIC_OPENAI_API_KEY",
+    "EXPO_PUBLIC_GEMINI_API_KEY"
+  ],
+  "critical_files": [
+    "src/contexts/AuthContext.tsx",
+    "app/(auth)/login.tsx",
+    "app/(auth)/register.tsx",
+    "app/(auth)/_layout.tsx",
+    "app/index.tsx",
+    "app/_layout.tsx",
+    "src/lib/supabase.ts"
+  ],
+  "testing": {
+    "manual_tests_passed": true,
+    "build_status": "success",
+    "deployment_status": "success",
+    "errors": 0,
+    "warnings": 0
+  },
+  "deployment": {
+    "platform": "vercel",
+    "production_url": "https://desibarra-kontify-app2.vercel.app",
+    "build_time": "~4 minutes",
+    "bundle_size": "2.17 MB",
+    "static_routes": 25
+  },
+  "next_phase": {
+    "phase": 7,
+    "name": "Stripe Integration",
+    "tasks": [
+      "Configurar Stripe API",
+      "Implementar checkout flow",
+      "Crear planes de suscripción",
+      "Webhooks para pagos",
+      "Dashboard de suscripciones"
+    ]
+  },
+  "restoration_command": "Copy-Item -Path 'backups\\fase6_auth_complete\\*' -Destination '.' -Recurse -Force -Exclude node_modules,.git",
+  "notes": [
+    "Backup creado antes de implementar sistema de pagos (Fase 7)",
+    "UI optimizada con Mobile-First approach",
+    "Todos los tests manuales pasados exitosamente",
+    "0 errores en TypeScript y runtime",
+    "Listo para recibir usuarios en producción"
+  ]
+}

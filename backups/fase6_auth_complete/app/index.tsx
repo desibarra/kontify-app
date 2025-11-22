@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, ScrollView, Pressable, Linking, useWindowDimens
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { KontifyLogo } from '@/components/ui/KontifyLogo';
 
 export default function LandingPage() {
     const router = useRouter();
@@ -30,11 +29,6 @@ export default function LandingPage() {
                 style={styles.hero}
             >
                 <View style={styles.heroContent}>
-                    {/* Logo Header */}
-                    <View style={styles.logoHeader}>
-                        <KontifyLogo size="large" />
-                    </View>
-
                     {/* Badge */}
                     <View style={styles.badge}>
                         <View style={styles.badgeDot} />
@@ -427,9 +421,6 @@ const styles = StyleSheet.create({
     heroContent: {
         alignItems: 'center',
         zIndex: 2,
-    },
-    logoHeader: {
-        marginBottom: 24,
     },
     badge: {
         flexDirection: 'row',

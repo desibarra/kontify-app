@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "Kontify: Tu Asesor Fiscal y Legal Impulsado por IA",
+    "name": "Kontify",
     "slug": "kontify-app",
     "scheme": "kontify",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "userInterfaceStyle": "dark",
+    "icon": "./assets/images/logo.png",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "sdkVersion": "54.0.0",
     "ios": {
@@ -14,8 +14,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
-        "backgroundColor": "#000000"
+        "foregroundImage": "./assets/images/logo.png",
+        "backgroundColor": "#ffffff"
       },
       "permissions": [
         "android.permission.RECORD_AUDIO",
@@ -30,10 +30,10 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/icon.png",
+          "image": "./assets/images/logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#000000"
+          "backgroundColor": "#ffffff"
         }
       ]
     ],
@@ -46,14 +46,11 @@
     "owner": "desibarra",
     "web": {
       "favicon": "./assets/images/favicon.png",
-      "name": "Kontify: Tu Asesor Fiscal y Legal Impulsado por IA",
+      "name": "Kontify - Expertos Fiscales y Legales",
       "shortName": "Kontify",
-      "description": "La plataforma SaaS más rápida para conectar con expertos legales y fiscales con el soporte de Inteligencia Artificial.",
-      "lang": "es",
+      "description": "Conecta con abogados, contadores y expertos verificados al instante con ayuda de IA.",
       "themeColor": "#92BF4E",
       "backgroundColor": "#000000",
-      "startUrl": "/",
-      "display": "standalone",
       "bundler": "metro",
       "output": "static"
     }

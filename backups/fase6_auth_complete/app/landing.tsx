@@ -1,21 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable, Linking, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable, Linking } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { KontifyLogo } from '@/components/ui/KontifyLogo';
 
 export default function LandingPage() {
     const router = useRouter();
-    const { width } = useWindowDimensions();
-    const isDesktop = width >= 768; // Breakpoint para tablet/desktop
 
     const handleCTA = () => {
-        router.push('/(auth)/register');
-    };
-
-    const handleLogin = () => {
-        router.push('/(auth)/login');
+        router.push('/(tabs)/ai-chat');
     };
 
     const openLink = (url: string) => {
@@ -30,34 +23,11 @@ export default function LandingPage() {
                 style={styles.hero}
             >
                 <View style={styles.heroContent}>
-                    {/* Logo Header */}
-                    <View style={styles.logoHeader}>
-                        <KontifyLogo size="large" />
-                    </View>
-
                     {/* Badge */}
                     <View style={styles.badge}>
                         <View style={styles.badgeDot} />
                         <Text style={styles.badgeText}>Impulsado por IA Avanzada</Text>
                     </View>
-
-                    {/* Mobile: Badges en flujo normal */}
-                    {!isDesktop && (
-                        <View style={styles.mobileBadges}>
-                            <View style={styles.mobileBadge}>
-                                <Ionicons name="shield-checkmark" size={20} color="#92BF4E" />
-                                <Text style={styles.mobileBadgeText}>100% Seguro</Text>
-                            </View>
-                            <View style={styles.mobileBadge}>
-                                <Ionicons name="flash" size={20} color="#92BF4E" />
-                                <Text style={styles.mobileBadgeText}>Instantáneo</Text>
-                            </View>
-                            <View style={styles.mobileBadge}>
-                                <Ionicons name="people" size={20} color="#92BF4E" />
-                                <Text style={styles.mobileBadgeText}>Expertos 24/7</Text>
-                            </View>
-                        </View>
-                    )}
 
                     {/* Main Headline */}
                     <Text style={styles.heroTitle}>
@@ -85,16 +55,9 @@ export default function LandingPage() {
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 1 }}
                         >
-                            <Text style={styles.ctaText}>Comenzar Ahora</Text>
+                            <Text style={styles.ctaText}>Empieza tu Diagnóstico Gratis</Text>
                             <Ionicons name="arrow-forward" size={20} color="#000" />
                         </LinearGradient>
-                    </Pressable>
-
-                    {/* Login Link */}
-                    <Pressable onPress={handleLogin} style={styles.loginLink}>
-                        <Text style={styles.loginText}>
-                            ¿Ya tienes cuenta? <Text style={styles.loginTextBold}>Inicia sesión</Text>
-                        </Text>
                     </Pressable>
 
                     {/* Trust Line */}
@@ -103,23 +66,21 @@ export default function LandingPage() {
                     </Text>
                 </View>
 
-                {/* Desktop: Floating Cards Animation */}
-                {isDesktop && (
-                    <View style={styles.floatingCards}>
-                        <View style={[styles.floatingCard, styles.card1]}>
-                            <Ionicons name="shield-checkmark" size={24} color="#92BF4E" />
-                            <Text style={styles.cardText}>100% Seguro</Text>
-                        </View>
-                        <View style={[styles.floatingCard, styles.card2]}>
-                            <Ionicons name="flash" size={24} color="#92BF4E" />
-                            <Text style={styles.cardText}>Instantáneo</Text>
-                        </View>
-                        <View style={[styles.floatingCard, styles.card3]}>
-                            <Ionicons name="people" size={24} color="#92BF4E" />
-                            <Text style={styles.cardText}>Expertos 24/7</Text>
-                        </View>
+                {/* Floating Cards Animation */}
+                <View style={styles.floatingCards}>
+                    <View style={[styles.floatingCard, styles.card1]}>
+                        <Ionicons name="shield-checkmark" size={24} color="#92BF4E" />
+                        <Text style={styles.cardText}>100% Seguro</Text>
                     </View>
-                )}
+                    <View style={[styles.floatingCard, styles.card2]}>
+                        <Ionicons name="flash" size={24} color="#92BF4E" />
+                        <Text style={styles.cardText}>Instantáneo</Text>
+                    </View>
+                    <View style={[styles.floatingCard, styles.card3]}>
+                        <Ionicons name="people" size={24} color="#92BF4E" />
+                        <Text style={styles.cardText}>Expertos 24/7</Text>
+                    </View>
+                </View>
             </LinearGradient>
 
             {/* VALUE PROPOSITION */}
@@ -428,9 +389,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         zIndex: 2,
     },
-    logoHeader: {
-        marginBottom: 24,
-    },
     badge: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -497,50 +455,10 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         letterSpacing: 0.3,
     },
-    loginLink: {
-        marginTop: 16,
-        padding: 8,
-    },
-    loginText: {
-        color: '#999',
-        fontSize: 14,
-        textAlign: 'center',
-    },
-    loginTextBold: {
-        color: '#92BF4E',
-        fontWeight: '600',
-    },
     trustLine: {
         color: '#666666',
         fontSize: 14,
         textAlign: 'center',
-        marginTop: 8,
-    },
-
-    // MOBILE BADGES (Responsive)
-    mobileBadges: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        gap: 12,
-        marginBottom: 24,
-        paddingHorizontal: 16,
-    },
-    mobileBadge: {
-        backgroundColor: '#1a1a1a',
-        borderWidth: 1,
-        borderColor: '#333333',
-        borderRadius: 12,
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 6,
-    },
-    mobileBadgeText: {
-        color: '#FFFFFF',
-        fontSize: 12,
-        fontWeight: '600',
     },
 
     // FLOATING CARDS
@@ -551,7 +469,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         zIndex: 1,
-        pointerEvents: 'none', // No bloquear interacción con CTA
+        pointerEvents: 'none',
     },
     floatingCard: {
         position: 'absolute',
@@ -568,7 +486,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,
         shadowRadius: 12,
-        maxWidth: 180, // Limitar ancho para evitar superposiciones
+        maxWidth: 180,
     },
     card1: {
         top: 80,
@@ -586,7 +504,7 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 13,
         fontWeight: '600',
-        flexShrink: 1, // Permitir que el texto se ajuste
+        flexShrink: 1,
     },
 
     // VALUE SECTION

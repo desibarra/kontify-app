@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter, Link } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
 import { Colors } from '@/constants/Colors';
+import { KontifyLogo } from '@/components/ui/KontifyLogo';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -56,12 +57,7 @@ export default function LoginScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.logoContainer}>
-            <LinearGradient
-              colors={['#92BF4E', '#7DA842']}
-              style={styles.logoGradient}
-            >
-              <Ionicons name="shield-checkmark" size={32} color="#000" />
-            </LinearGradient>
+            <KontifyLogo size="medium" />
           </View>
           <Text style={styles.title}>Bienvenido a Kontify</Text>
           <Text style={styles.subtitle}>

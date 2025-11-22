@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter, Link } from 'expo-router';
 import { useAuth } from '@/hooks/useAuth';
 import { Colors } from '@/constants/Colors';
+import { KontifyLogo } from '@/components/ui/KontifyLogo';
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
@@ -91,12 +92,7 @@ export default function RegisterScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.logoContainer}>
-            <LinearGradient
-              colors={['#92BF4E', '#7DA842']}
-              style={styles.logoGradient}
-            >
-              <Ionicons name="person-add" size={32} color="#000" />
-            </LinearGradient>
+            <KontifyLogo size="medium" />
           </View>
           <Text style={styles.title}>Crear cuenta</Text>
           <Text style={styles.subtitle}>

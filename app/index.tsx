@@ -24,12 +24,9 @@ export default function LandingPage() {
 
     return (
         <View style={styles.container}>
-            {/* FIXED HEADER */}
+            {/* FIXED HEADER - Logo en esquina superior izquierda */}
             <View style={styles.header}>
-                <KontifyLogo size="medium" />
-                <Pressable onPress={handleLogin} style={styles.headerLoginButton}>
-                    <Text style={styles.headerLoginText}>Inicia sesión</Text>
-                </Pressable>
+                <KontifyLogo size="small" />
             </View>
 
             <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
@@ -39,7 +36,7 @@ export default function LandingPage() {
                     style={styles.hero}
                 >
                     <View style={styles.heroContent}>
-                        {/* Badge */}
+                        {/* Badge - Movido más abajo */}
                         <View style={styles.badge}>
                             <View style={styles.badgeDot} />
                             <Text style={styles.badgeText}>Impulsado por IA Avanzada</Text>
@@ -424,38 +421,19 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 
-    // FIXED HEADER
+    // FIXED HEADER - Fondo negro sin franja verde
     header: {
         position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
-        height: 70,
-        backgroundColor: 'rgba(0, 0, 0, 0.9)',
-        borderBottomWidth: 1,
-        borderBottomColor: '#1a1a1a',
+        height: 80,
+        backgroundColor: '#000000',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 24,
+        justifyContent: 'flex-start',
+        paddingLeft: 20,
         zIndex: 1000,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    headerLoginButton: {
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#92BF4E',
-    },
-    headerLoginText: {
-        color: '#92BF4E',
-        fontSize: 14,
-        fontWeight: '600',
     },
 
     // HERO SECTION
@@ -480,6 +458,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#92BF4E40',
         marginBottom: 32,
+        marginTop: 20, // Espacio adicional desde el logo
     },
     badgeDot: {
         width: 8,
@@ -563,6 +542,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         gap: 12,
         marginBottom: 24,
+        marginTop: 16, // Espacio adicional desde el logo
         paddingHorizontal: 16,
     },
     mobileBadge: {

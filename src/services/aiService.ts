@@ -218,84 +218,60 @@ export const aiService = {
     userData?: any
   ): Promise<{ content: string; caseLevel: CaseLevel }> => {
     try {
-      const apiKey = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
-      console.log('AI Service - API Key configured:', !!apiKey);
+      console.log('🤖 AI Service - Sending request to chat proxy...');
 
-      if (!apiKey) {
-        throw new Error('API Key no configurada');
-      }
-
-      // Construir el contexto del sistema
-      const systemPrompt = `Eres un experto fiscal mexicano altamente calificado de la plataforma Kontify+.
-Tu objetivo es ayudar a usuarios (emprendedores y autónomos) con dudas sobre impuestos (SAT, IVA, ISR, RESICO, etc.).
-
-REGLAS:
-1. Responde de forma profesional, empática y concisa.
-2. Basa tus respuestas en la legislación vigente (LISR, LIVA, CFF).
-3. Si detectas un caso grave (auditoría, multas, embargo), clasifícalo como 'red'.
-4. Si es un tema de planeación o dudas complejas, clasifícalo como 'yellow'.
-5. Dudas generales o informativas son 'green'.
-6. Tienes un límite de 3 preguntas gratuitas por usuario. Esta es la pregunta número ${questionNumber}.
-   ${questionNumber >= 3 ? "ADVERTENCIA: Esta es la última pregunta gratuita. Al final de tu respuesta, invita sutilmente a contactar a un experto para seguimiento." : ""}
-
-FORMATO DE RESPUESTA (JSON):
-Debes responder SIEMPRE en formato JSON estricto con esta estructura:
-{
-  "answer": "Tu respuesta formateada en Markdown aquí...",
-  "caseLevel": "green" | "yellow" | "red"
-}`;
-
-      // Preparar mensajes para la API
+      // Preparar mensajes para la API (sin incluir el mensaje del sistema aquí, lo hace el proxy)
       const apiMessages = [
-        { role: 'system', content: systemPrompt },
         ...history.map(m => ({
-          role: m.role === 'assistant' ? 'assistant' : 'user',
+          role: m.role === 'assistant' ? 'assistant' as const : 'user' as const,
           content: m.content
         })),
-        { role: 'user', content: message }
+        { role: 'user' as const, content: message }
       ];
 
-      // Llamada a OpenAI
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      // Determinar la URL base según el entorno
+      const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
+      const baseUrl = isProduction 
+        ? 'https://desibarra-kontify-app2.vercel.app'
+        : 'http://localhost:8081';
+
+      // Llamada al proxy interno (evita CORS y protege API Key)
+      const response = await fetch(`${baseUrl}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          model: 'gpt-4o-mini', // O gpt-3.5-turbo si prefieres
           messages: apiMessages,
-          temperature: 0.7,
-          response_format: { type: "json_object" }
+          questionNumber
         })
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error('OpenAI Error:', errorData);
-        throw new Error('Error en la respuesta de OpenAI');
+        const errorData = await response.json().catch(() => ({}));
+        console.error('❌ Chat API Error:', errorData);
+        throw new Error(errorData.message || 'Error en la respuesta del servidor');
       }
 
       const data = await response.json();
-      const content = data.choices[0]?.message?.content;
 
-      if (!content) {
-        throw new Error('Respuesta vacía de OpenAI');
+      if (!data.success || !data.data) {
+        throw new Error('Respuesta inválida del servidor');
       }
 
-      // Parsear el JSON de la respuesta
-      const parsedResponse = JSON.parse(content);
+      console.log('✅ AI Response received successfully');
 
       return {
-        content: parsedResponse.answer,
-        caseLevel: parsedResponse.caseLevel as CaseLevel
+        content: data.data.content,
+        caseLevel: data.data.caseLevel as CaseLevel
       };
 
     } catch (error) {
-      console.error('AI Service Error:', error);
-      // Fallback en caso de error
+      console.error('❌ AI Service Error:', error);
+      
+      // Fallback con respuesta genérica
       return {
-        content: "Lo siento, estoy teniendo problemas para conectar con mi cerebro fiscal en este momento. Por favor intenta de nuevo en unos segundos.",
+        content: "Lo siento, estoy teniendo problemas para conectar con mi cerebro fiscal en este momento. Por favor intenta de nuevo en unos segundos o contacta a un experto para ayuda inmediata.",
         caseLevel: 'green'
       };
     }

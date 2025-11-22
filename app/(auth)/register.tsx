@@ -23,6 +23,7 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [selectedRole, setSelectedRole] = useState<'entrepreneur' | 'expert' | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,6 +34,11 @@ export default function RegisterScreen() {
   const validateForm = () => {
     if (!name || !email || !password || !confirmPassword) {
       Alert.alert('Error', 'Por favor completa todos los campos');
+      return false;
+    }
+
+    if (!selectedRole) {
+      Alert.alert('Error', 'Por favor selecciona tu perfil (Empresario o Asesor)');
       return false;
     }
 
@@ -60,20 +66,36 @@ export default function RegisterScreen() {
     if (!validateForm()) return;
 
     setIsLoading(true);
-    const { error } = await signUp(email, password, { full_name: name });
+    
+    // Enviar role en metadata para que el trigger lo capture
+    const { error } = await signUp(email, password, { 
+      full_name: name,
+      role: selectedRole // ✅ CAMPO CRÍTICO: Se envía a Supabase
+    });
+    
     setIsLoading(false);
 
     if (error) {
       Alert.alert('Error al registrarse', error.message);
     } else {
-      // Redirigir a selección de rol después del registro exitoso
+      // Redirigir según el rol seleccionado
       Alert.alert(
         '¡Cuenta creada!',
-        'Ahora selecciona cómo quieres usar Kontify',
+        selectedRole === 'expert' 
+          ? 'Completa tu perfil de asesor para empezar'
+          : '¡Bienvenido a Kontify!',
         [
           {
             text: 'Continuar',
-            onPress: () => router.push('/(auth)/role-selection'),
+            onPress: () => {
+              // Si es experto, redirigir a completar perfil
+              if (selectedRole === 'expert') {
+                router.push('/experts-onboarding');
+              } else {
+                // Si es empresario, ir al dashboard
+                router.push('/(tabs)/index');
+              }
+            },
           },
         ]
       );
@@ -186,6 +208,82 @@ export default function RegisterScreen() {
                   size={20}
                   color={colors.textSecondary}
                 />
+              </Pressable>
+            </View>
+          </View>
+
+          {/* Role Selection - NUEVO */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>¿Cómo quieres usar Kontify? *</Text>
+            <Text style={styles.roleSubtitle}>Selecciona tu perfil</Text>
+            
+            <View style={styles.roleContainer}>
+              {/* Opción: Empresario */}
+              <Pressable
+                style={[
+                  styles.roleCard,
+                  selectedRole === 'entrepreneur' && styles.roleCardSelected,
+                ]}
+                onPress={() => setSelectedRole('entrepreneur')}
+              >
+                <View style={[
+                  styles.roleIconContainer,
+                  selectedRole === 'entrepreneur' && styles.roleIconContainerSelected,
+                ]}>
+                  <Ionicons
+                    name="business"
+                    size={32}
+                    color={selectedRole === 'entrepreneur' ? '#93EC80' : colors.textSecondary}
+                  />
+                </View>
+                <Text style={[
+                  styles.roleTitle,
+                  selectedRole === 'entrepreneur' && styles.roleTitleSelected,
+                ]}>
+                  Empresario
+                </Text>
+                <Text style={styles.roleDescription}>
+                  Busco asesoría fiscal para mi negocio
+                </Text>
+                {selectedRole === 'entrepreneur' && (
+                  <View style={styles.roleCheck}>
+                    <Ionicons name="checkmark-circle" size={24} color="#93EC80" />
+                  </View>
+                )}
+              </Pressable>
+
+              {/* Opción: Asesor */}
+              <Pressable
+                style={[
+                  styles.roleCard,
+                  selectedRole === 'expert' && styles.roleCardSelected,
+                ]}
+                onPress={() => setSelectedRole('expert')}
+              >
+                <View style={[
+                  styles.roleIconContainer,
+                  selectedRole === 'expert' && styles.roleIconContainerSelected,
+                ]}>
+                  <Ionicons
+                    name="school"
+                    size={32}
+                    color={selectedRole === 'expert' ? '#93EC80' : colors.textSecondary}
+                  />
+                </View>
+                <Text style={[
+                  styles.roleTitle,
+                  selectedRole === 'expert' && styles.roleTitleSelected,
+                ]}>
+                  Asesor
+                </Text>
+                <Text style={styles.roleDescription}>
+                  Quiero ofrecer mis servicios de consultoría
+                </Text>
+                {selectedRole === 'expert' && (
+                  <View style={styles.roleCheck}>
+                    <Ionicons name="checkmark-circle" size={24} color="#93EC80" />
+                  </View>
+                )}
               </Pressable>
             </View>
           </View>
@@ -367,5 +465,62 @@ const styles = StyleSheet.create({
   backText: {
     fontSize: 14,
     color: '#999',
+  },
+  // Estilos para selección de rol
+  roleSubtitle: {
+    fontSize: 12,
+    color: '#999',
+    marginTop: 4,
+    marginBottom: 12,
+  },
+  roleContainer: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  roleCard: {
+    flex: 1,
+    backgroundColor: '#1a1a1a',
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#333',
+    padding: 16,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  roleCardSelected: {
+    borderColor: '#93EC80',
+    backgroundColor: 'rgba(147, 236, 128, 0.05)',
+  },
+  roleIconContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#2a2a2a',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  roleIconContainerSelected: {
+    backgroundColor: 'rgba(147, 236, 128, 0.15)',
+  },
+  roleTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#FFF',
+    marginBottom: 6,
+  },
+  roleTitleSelected: {
+    color: '#93EC80',
+  },
+  roleDescription: {
+    fontSize: 12,
+    color: '#999',
+    textAlign: 'center',
+    lineHeight: 16,
+  },
+  roleCheck: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
   },
 });

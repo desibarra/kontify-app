@@ -9,7 +9,10 @@ import { Specialty, CaseSummary, UserContactData } from '@/constants/Types';
 export default function AIChatScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+
+  console.log('🎯 AI Chat Screen - User:', user?.id);
+  console.log('👤 AI Chat Screen - Profile:', profile?.email, profile?.role);
 
   const navigateToExperts = (data?: {
     specialty?: Specialty;
@@ -18,18 +21,23 @@ export default function AIChatScreen() {
   }) => {
     // Navigate to experts tab with context data
     router.push({
-      pathname: '/experts-register',
+      pathname: '/(tabs)/index',
       params: {
         specialty: data?.specialty || '',
-        caseSummary: data?.caseSummary ? JSON.stringify(data.caseSummary) : '',
-        userContactData: data?.userContactData ? JSON.stringify(data.userContactData) : '',
+        fromChat: 'true',
       },
     });
   };
 
+  // Asegurar que siempre use el userId real si está autenticado
+  const effectiveUserId = user?.id || 'guest';
+
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      <AIChat userId={user?.id || 'guest'} onNavigateToExperts={navigateToExperts} />
+      <AIChat 
+        userId={effectiveUserId} 
+        onNavigateToExperts={navigateToExperts} 
+      />
     </View>
   );
 }

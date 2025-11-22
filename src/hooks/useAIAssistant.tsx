@@ -180,9 +180,21 @@ Tienes **3 preguntas gratuitas**.`,
     const summary = aiService.generateCaseSummary(messages, caseLevel);
     setCaseSummary(summary);
 
-    // NUEVO: Crear lead real en Supabase
+    // Validar que el usuario esté autenticado (no guest)
+    if (!userId || userId === 'guest') {
+      console.warn('⚠️ No se puede crear lead: Usuario no autenticado');
+      return;
+    }
+
+    // Crear lead real en Supabase
     try {
       console.log('📝 Creando lead en Supabase desde chat IA...');
+      console.log('👤 User ID:', userId);
+      console.log('📊 Summary:', {
+        level: summary.level,
+        specialties: summary.detectedSpecialties,
+        urgency: summary.urgency
+      });
       
       // Importar leadsService dinámicamente para evitar dependencias circulares
       const { leadsService } = await import('../services/leadsService');
@@ -198,9 +210,10 @@ Tienes **3 preguntas gratuitas**.`,
           fromAIChat: true,
           caseLevel: summary.level,
           detectedSpecialties: summary.detectedSpecialties,
-          conversationContext: summary.conversationContext.substring(0, 1000), // Limitar tamaño
+          conversationContext: summary.conversationContext.substring(0, 1000),
           userContactData: data,
           generatedAt: summary.generatedAt.toISOString(),
+          messagesCount: messages.length,
         },
       };
 
@@ -208,11 +221,14 @@ Tienes **3 preguntas gratuitas**.`,
 
       if (createdLead) {
         console.log('✅ Lead creado exitosamente:', createdLead.id);
+        console.log('📧 Email de contacto:', data.email);
+        console.log('📞 Teléfono:', data.phone);
       } else {
-        console.error('❌ No se pudo crear el lead');
+        console.error('❌ No se pudo crear el lead - respuesta vacía');
       }
     } catch (error) {
       console.error('❌ Error creating lead from AI chat:', error);
+      console.error('Stack:', error instanceof Error ? error.stack : 'No stack trace');
       // No bloqueamos el flujo si falla la creación del lead
     }
   }, [messages, caseLevel, userId]);

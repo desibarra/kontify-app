@@ -4,7 +4,16 @@
     "devCommand": "npx expo start --web",
     "installCommand": "npm install --legacy-peer-deps",
     "framework": null,
+    "functions": {
+        "api/**/*.ts": {
+            "runtime": "edge"
+        }
+    },
     "rewrites": [
+        {
+            "source": "/api/:path*",
+            "destination": "/api/:path*"
+        },
         {
             "source": "/(.*)",
             "destination": "/index.html"
